@@ -1,5 +1,6 @@
 locals {
   platform = "$platform"
+  global_folder_name = "$global_folder_name"
   tfc_org = "$tfc_org"
   root_folder_num    = "$root_folder_num"
   billing_account_id = "$billing_account_id"

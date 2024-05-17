@@ -19,6 +19,7 @@ clean:
 # Write the Values in Terragrunt file
 template: clean
   platform="$PLATFORM" \
+  global_folder_name="$GLOBAL_FOLDER_NAME" \
   tfc_org="$TFC_ORG" \
   root_folder_num="$GCP_ROOT_FOLDER_NUM" \
   billing_account_id="$GCP_BILLING_ACCOUNT_ID" \
