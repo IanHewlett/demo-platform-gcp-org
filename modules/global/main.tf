@@ -29,3 +29,9 @@ resource "google_project_iam_binding" "project_iam_authoritative" {
     "serviceAccount:${google_service_account.core_service_account.email}"
   ]
 }
+
+module "cloud_build" {
+  source = "../shared/gcp-cloud-build"
+
+  cicd_project_name = module.cicd_project.name
+}
