@@ -13,6 +13,11 @@ variable "region" {
   type        = string
 }
 
+variable "environment" {
+  description = ""
+  type        = string
+}
+
 variable "app_project_name" {
   description = "project name"
   type        = string
