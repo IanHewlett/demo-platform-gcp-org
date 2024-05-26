@@ -42,3 +42,8 @@ variable "app_subnet" {
   description = ""
   type        = string
 }
+
+variable "domains" {
+  type        = list(string)
+  description = "List of domain names for certificate provisioning"
+}

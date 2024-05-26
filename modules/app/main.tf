@@ -34,3 +34,14 @@ module "cloud_run_api_service" {
     "roles/cloudtrace.agent"
   ]
 }
+
+module "load_balancer" {
+  source = "../shared/gcp-load-balancer"
+
+  project_name               = module.app_project.name
+  cloud_run_service_name_ui  = module.cloud_run_ui_service.cloud_run_service_name
+  cloud_run_service_name_api = module.cloud_run_api_service.cloud_run_service_name
+  domains                    = var.domains
+  region                     = var.region
+  environment                = var.environment
+}

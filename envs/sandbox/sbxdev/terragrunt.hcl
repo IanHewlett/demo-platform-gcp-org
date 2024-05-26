@@ -25,6 +25,7 @@ inputs = {
   app_roles          = local.app_vars.locals.app_roles
   app_services       = local.app_vars.locals.app_services
   app_subnet         = local.app_vars.locals.app_subnet
+  domains            = ["ianwhewlett.com"]
 }
 
 terraform {
