@@ -4,3 +4,4 @@
 .terragrunt-cache
 .env
 /terragrunt.hcl
+workbench
