@@ -26,6 +26,7 @@ inputs = {
   app_services       = local.app_vars.locals.app_services
   app_subnet         = local.app_vars.locals.app_subnet
   domains            = ["ianwhewlett.com"]
+  allocated_ip_range = "cloudsql-psa"
 }
 
 terraform {

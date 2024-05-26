@@ -45,3 +45,15 @@ module "load_balancer" {
   region                     = var.region
   environment                = var.environment
 }
+
+module "cloudsql_api" {
+  source = "../shared/gcp-cloudsql"
+
+  project_name           = module.app_project.name
+  region                 = var.region
+  allocated_ip_range     = var.allocated_ip_range
+  db_tier                = "db-custom-1-3840"
+  environment            = var.environment
+  api_service_account    = module.cloud_run_api_service.service_runner_email
+  shared_network_project = var.host_vpc
+}

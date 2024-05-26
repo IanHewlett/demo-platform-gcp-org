@@ -47,3 +47,8 @@ variable "domains" {
   type        = list(string)
   description = "List of domain names for certificate provisioning"
 }
+
+variable "allocated_ip_range" {
+  type        = string
+  description = "Name of the allocated IP range used by psa"
+}
