@@ -10,14 +10,16 @@ dependency "core" {
 locals {
   global_vars = read_terragrunt_config(find_in_parent_folders("global.hcl"))
   core_vars = read_terragrunt_config(find_in_parent_folders("core.hcl"))
+  environment = "${basename(get_terragrunt_dir())}"
   app_vars = read_terragrunt_config("app.hcl")
-  app_project_name = "sbxdev-mk31"
+  app_project_name = "sbxdev-mk39"
 }
 
 inputs = {
   billing_account_id = include.root.locals.billing_account_id
   app_folder_id = dependency.core.outputs.app_folder_id
   region = local.core_vars.locals.region
+  environment = local.environment
   app_project_name = local.app_project_name
   host_vpc = dependency.core.outputs.host_vpc_name
   app_roles = local.app_vars.locals.app_roles
