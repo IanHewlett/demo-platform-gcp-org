@@ -52,3 +52,8 @@ variable "allocated_ip_range" {
   type        = string
   description = "Name of the allocated IP range used by psa"
 }
+
+variable "alert_recipients" {
+  type        = list(string)
+  description = "List of email alert recipients."
+}

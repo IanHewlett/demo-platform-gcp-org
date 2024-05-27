@@ -57,3 +57,11 @@ module "cloudsql_api" {
   api_service_account    = module.cloud_run_api_service.service_runner_email
   shared_network_project = var.host_vpc
 }
+
+module "notifications" {
+  source = "../shared/gcp-notifications"
+
+  project          = module.app_project.name
+  environment      = var.environment
+  alert_recipients = var.alert_recipients
+}

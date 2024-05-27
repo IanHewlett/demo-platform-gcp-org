@@ -27,6 +27,7 @@ inputs = {
   app_subnet         = local.app_vars.locals.app_subnet
   domains            = ["ianwhewlett.com"]
   allocated_ip_range = "cloudsql-psa"
+  alert_recipients   = ["ian.w.hewlett@gmail.com"]
 }
 
 terraform {
