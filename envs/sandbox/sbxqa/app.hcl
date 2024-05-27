@@ -1,5 +1,5 @@
 locals {
-  app_subnet = "172.16.33.0/24"
+  app_subnet_cidr = "172.16.33.0/24"
   app_roles = [
     "roles/cloudscheduler.admin",
     "roles/cloudsql.admin",
@@ -7,7 +7,6 @@ locals {
     "roles/compute.loadBalancerAdmin",
     "roles/compute.networkAdmin",
     "roles/eventarc.admin",
-    "roles/iam.roleAdmin",
     "roles/iam.roleAdmin",
     "roles/iam.securityAdmin",
     "roles/iam.serviceAccountAdmin",
@@ -42,6 +41,7 @@ locals {
     "osconfig.googleapis.com",
     "pubsub.googleapis.com",
     "run.googleapis.com",
+    "secretmanager.googleapis.com",
     "servicemanagement.googleapis.com",
     "servicenetworking.googleapis.com",
     "serviceusage.googleapis.com",
