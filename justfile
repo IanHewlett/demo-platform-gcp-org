@@ -39,3 +39,14 @@ apply module: (plan module)
 
 destroy module: (validate module)
   just _terragrunt-run destroy {{module}} --terragrunt-non-interactive
+
+# ex: just test app envs/sandbox/sbxdev
+test module env_path:
+  inspec exec test/{{module}} -t gcp:// --no-create-lockfile --input-file test/{{module}}/inputs.yml
+@_get-module-inputs module env_path:
+  rm -rf test/{{module}}/inputs.yaml
+  terragrunt render-json --terragrunt-config {{env_path}}/terragrunt.hcl --terragrunt-json-out inputs.json
+  jq .inputs {{env_path}}/inputs.json > inputs.json
+  yq -p json -o yaml inputs.json > test/{{module}}/inputs.yml
+  rm -rf {{env_path}}/inputs.json
+  rm -rf inputs.json

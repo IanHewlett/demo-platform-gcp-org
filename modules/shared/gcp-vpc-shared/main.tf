@@ -41,7 +41,7 @@ resource "google_compute_subnetwork" "core_subnet" {
   purpose                    = "PRIVATE"
   private_ip_google_access   = true
   private_ipv6_google_access = "DISABLE_GOOGLE_ACCESS"
-  region                     = var.region
+  region                     = var.gcp_region
   project                    = google_compute_network.vpc.name
 
   log_config {
@@ -56,7 +56,7 @@ resource "google_compute_subnetwork" "serverless_subnet" {
   purpose                    = "PRIVATE"
   private_ip_google_access   = true
   private_ipv6_google_access = "DISABLE_GOOGLE_ACCESS"
-  region                     = var.region
+  region                     = var.gcp_region
   project                    = google_compute_network.vpc.name
 
   log_config {
@@ -69,7 +69,7 @@ resource "google_vpc_access_connector" "vpc_connector" {
   machine_type  = "e2-standard-4"
   min_instances = 2
   max_instances = 3
-  region        = var.region
+  region        = var.gcp_region
   project       = google_compute_network.vpc.name
   provider      = google-beta
 

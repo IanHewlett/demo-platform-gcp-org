@@ -5,7 +5,7 @@ variable "billing_account_id" {
 
 variable "folder_id" {
   description = "folder id"
-  type = string
+  type        = string
 }
 
 variable "project_name" {

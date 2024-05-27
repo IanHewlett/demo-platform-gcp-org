@@ -8,7 +8,7 @@ variable "security_project_name" {
   type        = string
 }
 
-variable "region" {
+variable "gcp_region" {
   description = "Region for resources to be located in"
 }
 

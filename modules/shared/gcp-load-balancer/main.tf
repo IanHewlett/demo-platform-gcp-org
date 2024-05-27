@@ -14,7 +14,7 @@ resource "google_compute_managed_ssl_certificate" "managed_cert" {
 
 resource "google_compute_region_network_endpoint_group" "serverless_api" {
   name    = "ingress-${var.environment}-neg-api"
-  region  = var.region
+  region  = var.gcp_region
   project = var.project_name
 
   cloud_run {
@@ -24,7 +24,7 @@ resource "google_compute_region_network_endpoint_group" "serverless_api" {
 
 resource "google_compute_region_network_endpoint_group" "serverless_ui" {
   name    = "ingress-${var.environment}-neg-ui"
-  region  = var.region
+  region  = var.gcp_region
   project = var.project_name
 
   cloud_run {

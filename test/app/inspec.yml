@@ -1,0 +1,13 @@
+name: app
+title: GCP InSpec Profile
+version: 0.1.0
+inspec_version: '>= 4'
+inputs:
+- name: app_project_name
+  required: true
+  description: 'The GCP project identifier.'
+depends:
+- name: inspec-gcp
+  url: https://github.com/inspec/inspec-gcp/archive/main.tar.gz
+supports:
+- platform: gcp

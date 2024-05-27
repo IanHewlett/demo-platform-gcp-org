@@ -28,9 +28,9 @@ resource "google_project_iam_member" "servicenetworking" {
 resource "google_project_service" "project_services" {
   for_each = var.project_services
 
-  service                    = each.key
-  project                    = google_project.core_project.name
-  disable_on_destroy         = false
+  service            = each.key
+  project            = google_project.core_project.name
+  disable_on_destroy = false
 }
 
 resource "google_project_service_identity" "cloudbuild_jit_si" {

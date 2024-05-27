@@ -1,5 +1,5 @@
 locals {
-  app_subnet = "172.16.32.0/24"
+  app_subnet_cidr = "172.16.32.0/24"
   app_roles = [
     "roles/cloudscheduler.admin",
     "roles/cloudsql.admin",

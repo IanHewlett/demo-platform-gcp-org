@@ -72,14 +72,14 @@ resource "google_compute_shared_vpc_service_project" "vpc_service_project" {
 }
 
 resource "google_compute_subnetwork" "app_subnet" {
-  ip_cidr_range              = var.app_subnet
+  ip_cidr_range              = var.app_subnet_cidr
   name                       = "${var.project_name}-subnet"
   network                    = var.host_vpc
   description                = "Terraform-managed."
   purpose                    = "PRIVATE"
   private_ip_google_access   = true
   private_ipv6_google_access = "DISABLE_GOOGLE_ACCESS"
-  region                     = var.region
+  region                     = var.gcp_region
   project                    = var.host_vpc
 
   log_config {
@@ -89,7 +89,7 @@ resource "google_compute_subnetwork" "app_subnet" {
 
 resource "google_compute_subnetwork_iam_binding" "subnet_binding" {
   subnetwork = google_compute_subnetwork.app_subnet.id
-  region     = var.region
+  region     = var.gcp_region
   project    = var.host_vpc
   members = [
     "serviceAccount:${google_project.app_project.number}@cloudservices.gserviceaccount.com",

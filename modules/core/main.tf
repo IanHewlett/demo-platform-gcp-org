@@ -29,9 +29,9 @@ module "security_project" {
 module "shared_vpc" {
   source = "../shared/gcp-vpc-shared"
 
-  network_project_name  = module.network_project.name
-  security_project_name = module.security_project.name
-  region                = var.region
-  core_subnet_cidr      = var.core_subnet_cidr
+  network_project_name   = module.network_project.name
+  security_project_name  = module.security_project.name
+  gcp_region             = var.gcp_region
+  core_subnet_cidr       = var.core_subnet_cidr
   serverless_subnet_cidr = var.serverless_subnet_cidr
 }

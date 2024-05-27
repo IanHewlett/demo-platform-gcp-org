@@ -2,7 +2,7 @@ resource "google_sql_database_instance" "application_db_instance" {
   provider = google-beta
 
   name                = "api-${var.environment}"
-  region              = var.region
+  region              = var.gcp_region
   database_version    = "POSTGRES_15"
   deletion_protection = false
   project             = var.project_name

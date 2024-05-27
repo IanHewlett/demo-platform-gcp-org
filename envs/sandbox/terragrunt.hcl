@@ -18,7 +18,7 @@ locals {
 inputs = {
   billing_account_id     = include.root.locals.billing_account_id
   project_folder_id      = dependency.global.outputs.project_folder_id
-  region                 = local.core_vars.locals.region
+  gcp_region             = local.core_vars.locals.gcp_region
   environment            = local.environment
   network_project_name   = local.network_project_name
   security_project_name  = local.security_project_name

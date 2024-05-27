@@ -7,15 +7,15 @@ module "app_project" {
   billing_account_id = var.billing_account_id
   folder_id          = var.app_folder_id
   host_vpc           = var.host_vpc
-  region             = var.region
-  app_subnet         = var.app_subnet
+  gcp_region         = var.gcp_region
+  app_subnet_cidr    = var.app_subnet_cidr
 }
 
 module "cloud_run_ui_service" {
   source = "../shared/gcp-cloud-run"
 
   project_name           = module.app_project.name
-  region                 = var.region
+  gcp_region             = var.gcp_region
   cloud_run_service_name = "app-ui-service"
 
   service_account_roles = []
@@ -25,7 +25,7 @@ module "cloud_run_api_service" {
   source = "../shared/gcp-cloud-run"
 
   project_name           = module.app_project.name
-  region                 = var.region
+  gcp_region             = var.gcp_region
   cloud_run_service_name = "app-api-service"
 
   service_account_roles = [
@@ -42,7 +42,7 @@ module "load_balancer" {
   cloud_run_service_name_ui  = module.cloud_run_ui_service.cloud_run_service_name
   cloud_run_service_name_api = module.cloud_run_api_service.cloud_run_service_name
   domains                    = var.domains
-  region                     = var.region
+  gcp_region                 = var.gcp_region
   environment                = var.environment
 }
 
@@ -50,7 +50,7 @@ module "cloudsql_api" {
   source = "../shared/gcp-cloudsql"
 
   project_name           = module.app_project.name
-  region                 = var.region
+  gcp_region             = var.gcp_region
   allocated_ip_range     = var.allocated_ip_range
   db_tier                = "db-custom-1-3840"
   environment            = var.environment

@@ -8,7 +8,7 @@ variable "app_folder_id" {
   type        = string
 }
 
-variable "region" {
+variable "gcp_region" {
   description = "Region for resources to be located in"
   type        = string
 }
@@ -38,7 +38,7 @@ variable "app_services" {
   type        = list(string)
 }
 
-variable "app_subnet" {
+variable "app_subnet_cidr" {
   description = ""
   type        = string
 }

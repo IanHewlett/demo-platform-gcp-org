@@ -8,7 +8,7 @@ variable "project_folder_id" {
   type = string
 }
 
-variable "region" {
+variable "gcp_region" {
   description = "Region for resources to be located in"
   type        = string
 }

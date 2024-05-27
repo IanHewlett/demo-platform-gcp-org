@@ -3,7 +3,7 @@ variable "project_name" {
   description = "Google Project ID"
 }
 
-variable "region" {
+variable "gcp_region" {
   type        = string
   description = "Google Cloud Region"
 }

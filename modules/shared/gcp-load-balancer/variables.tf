@@ -8,7 +8,7 @@ variable "domains" {
   description = "List of domain names for certificate provisioning"
 }
 
-variable "region" {
+variable "gcp_region" {
   type        = string
   description = "Google Cloud Region"
 }
