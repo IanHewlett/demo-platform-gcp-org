@@ -1,0 +1,9 @@
+name: global
+title: GCP InSpec Profile
+version: 0.1.0
+inspec_version: '>= 4'
+depends:
+- name: inspec-gcp
+  url: https://github.com/inspec/inspec-gcp/archive/main.tar.gz
+supports:
+- platform: gcp
