@@ -66,3 +66,10 @@ module "notifications" {
   environment      = var.environment
   alert_recipients = var.alert_recipients
 }
+
+module "monitoring_dashboard" {
+  source = "../shared/gcp-monitoring-dashboard"
+
+  project_name = module.app_project.name
+  environment  = var.environment
+}
