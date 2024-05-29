@@ -3,12 +3,13 @@ module "app_project" {
 
   project_name       = var.app_project_name
   app_roles          = var.app_roles
-  app_services       = var.app_services
+  project_services   = var.app_services
   billing_account_id = var.billing_account_id
   folder_id          = var.app_folder_id
   host_vpc           = var.host_vpc
   gcp_region         = var.gcp_region
   app_subnet_cidr    = var.app_subnet_cidr
+  jit_services       = var.jit_services
 }
 
 module "cloud_run_ui_service" {

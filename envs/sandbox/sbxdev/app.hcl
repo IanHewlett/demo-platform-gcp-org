@@ -50,4 +50,9 @@ locals {
     "vpcaccess.googleapis.com",
     "workflows.googleapis.com",
   ]
+  jit_services = [
+    "cloudbuild.googleapis.com",
+    "pubsub.googleapis.com",
+    "sqladmin.googleapis.com"
+  ]
 }

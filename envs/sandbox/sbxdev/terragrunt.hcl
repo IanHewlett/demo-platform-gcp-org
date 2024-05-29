@@ -12,7 +12,7 @@ locals {
   core_vars        = read_terragrunt_config(find_in_parent_folders("core.hcl"))
   app_vars         = read_terragrunt_config("app.hcl")
   environment      = "${basename(get_terragrunt_dir())}"
-  app_project_name = "sbxdev-mk39"
+  app_project_name = "sbxdev-mk40"
 }
 
 inputs = {
@@ -24,6 +24,7 @@ inputs = {
   host_vpc           = dependency.core.outputs.host_vpc_name
   app_roles          = local.app_vars.locals.app_roles
   app_services       = local.app_vars.locals.app_services
+  jit_services       = local.app_vars.locals.jit_services
   app_subnet_cidr    = local.app_vars.locals.app_subnet_cidr
   domains            = ["ianwhewlett.com"]
   allocated_ip_range = "cloudsql-psa"

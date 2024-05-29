@@ -38,6 +38,11 @@ variable "app_services" {
   type        = list(string)
 }
 
+variable "jit_services" {
+  description = ""
+  type        = set(string)
+}
+
 variable "app_subnet_cidr" {
   description = ""
   type        = string

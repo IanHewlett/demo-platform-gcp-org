@@ -18,8 +18,13 @@ variable "gcp_region" {
   type        = string
 }
 
-variable "app_services" {
+variable "project_services" {
   description = "Service APIs enabled by default in the app-environment projects."
+  type        = set(string)
+}
+
+variable "jit_services" {
+  description = ""
   type        = set(string)
 }
 

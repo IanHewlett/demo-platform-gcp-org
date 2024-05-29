@@ -1,4 +1,4 @@
-resource "google_project" "core_project" {
+resource "google_project" "this" {
   name                = var.project_name
   project_id          = var.project_name
   folder_id           = var.folder_id
@@ -7,40 +7,45 @@ resource "google_project" "core_project" {
   auto_create_network = false
 }
 
-resource "google_project_default_service_accounts" "default_service_accounts" {
-  project        = google_project.core_project.name
-  action         = "DISABLE"
-  restore_policy = "REVERT_AND_IGNORE_FAILURE"
-}
-
-resource "google_project_service_identity" "servicenetworking" {
-  provider = google-beta
-  service  = "servicenetworking.googleapis.com"
-  project  = google_project.core_project.name
-}
-
-resource "google_project_iam_member" "servicenetworking" {
-  member  = "serviceAccount:${google_project_service_identity.servicenetworking.email}"
-  role    = "roles/servicenetworking.serviceAgent"
-  project = google_project.core_project.name
-}
-
-resource "google_project_service" "project_services" {
+resource "google_project_service" "enabled_services" {
   for_each = var.project_services
 
+  project            = google_project.this.name
   service            = each.key
-  project            = google_project.core_project.name
   disable_on_destroy = false
 }
 
-resource "google_project_service_identity" "cloudbuild_jit_si" {
-  provider = google-beta
-  service  = "cloudbuild.googleapis.com"
-  project  = google_project.core_project.name
+resource "google_project_default_service_accounts" "default_service_accounts" {
+  project        = google_project.this.name
+  action         = "DISABLE"
+  restore_policy = "REVERT_AND_IGNORE_FAILURE"
+
+  depends_on = [google_project_service.enabled_services]
 }
 
-resource "google_project_service_identity" "secretmanager_jit_si" {
+resource "google_project_service_identity" "servicenetworking_jit_si" {
   provider = google-beta
-  service  = "secretmanager.googleapis.com"
-  project  = google_project.core_project.name
+
+  project = google_project.this.name
+  service = "servicenetworking.googleapis.com"
+
+  depends_on = [google_project_service.enabled_services]
+}
+
+resource "google_project_iam_member" "servicenetworking" {
+  project = google_project.this.name
+  role    = "roles/servicenetworking.serviceAgent"
+  member  = "serviceAccount:${google_project_service_identity.servicenetworking_jit_si.email}"
+
+  depends_on = [google_project_service.enabled_services]
+}
+
+resource "google_project_service_identity" "jit_si" {
+  for_each = var.jit_services
+  provider = google-beta
+
+  project = google_project.this.name
+  service = each.key
+
+  depends_on = [google_project_service.enabled_services]
 }

@@ -14,6 +14,7 @@ inputs = {
   billing_account_id = include.root.locals.billing_account_id
   cicd_project_name  = local.cicd_project_name
   project_services   = local.global_vars.locals.project_services
+  jit_services       = local.global_vars.locals.jit_services
   core_roles         = local.global_vars.locals.core_roles
 }
 

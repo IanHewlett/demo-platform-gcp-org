@@ -15,6 +15,7 @@ module "network_project" {
   folder_id          = google_folder.core.id
   project_name       = var.network_project_name
   project_services   = var.project_services
+  jit_services       = var.jit_services
 }
 
 module "security_project" {
@@ -24,6 +25,7 @@ module "security_project" {
   folder_id          = google_folder.core.id
   project_name       = var.security_project_name
   project_services   = var.project_services
+  jit_services       = var.jit_services
 }
 
 module "shared_vpc" {

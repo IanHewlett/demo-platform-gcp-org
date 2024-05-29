@@ -4,8 +4,8 @@ variable "billing_account_id" {
 }
 
 variable "project_folder_id" {
-  #description = ""
-  type = string
+  description = ""
+  type        = string
 }
 
 variable "gcp_region" {
@@ -30,6 +30,11 @@ variable "security_project_name" {
 
 variable "project_services" {
   description = "Service APIs enabled by default in core projects."
+  type        = set(string)
+}
+
+variable "jit_services" {
+  description = ""
   type        = set(string)
 }
 

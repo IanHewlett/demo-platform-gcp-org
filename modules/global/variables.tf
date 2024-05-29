@@ -18,6 +18,11 @@ variable "project_services" {
   type        = list(string)
 }
 
+variable "jit_services" {
+  description = ""
+  type        = set(string)
+}
+
 variable "cicd_project_name" {
   description = "project name"
   type        = string

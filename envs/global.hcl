@@ -22,6 +22,10 @@ locals {
     "storage.googleapis.com",
     "vpcaccess.googleapis.com",
   ]
+  jit_services = [
+    "cloudbuild.googleapis.com",
+    "secretmanager.googleapis.com"
+  ]
   core_roles = [
     "roles/cloudbuild.builds.builder",
     "roles/cloudbuild.builds.editor",

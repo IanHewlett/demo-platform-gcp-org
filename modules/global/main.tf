@@ -10,6 +10,7 @@ module "cicd_project" {
   folder_id          = google_folder.global.id
   project_name       = var.cicd_project_name
   project_services   = var.project_services
+  jit_services       = var.jit_services
 }
 
 resource "google_service_account" "core_service_account" {
@@ -22,8 +23,8 @@ resource "google_service_account" "core_service_account" {
 resource "google_project_iam_binding" "project_iam_authoritative" {
   for_each = var.core_roles
 
-  role    = each.key
   project = module.cicd_project.name
+  role    = each.key
 
   members = [
     "serviceAccount:${google_service_account.core_service_account.email}"
