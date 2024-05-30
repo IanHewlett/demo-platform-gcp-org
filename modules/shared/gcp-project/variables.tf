@@ -4,7 +4,7 @@ variable "billing_account_id" {
 }
 
 variable "folder_id" {
-  description = "folder id"
+  description = ""
   type        = string
 }
 
@@ -14,7 +14,7 @@ variable "project_name" {
 }
 
 variable "project_services" {
-  description = "Service APIs enabled by default in core projects."
+  description = "Service APIs enabled by default in the app-environment projects."
   type        = set(string)
 }
 

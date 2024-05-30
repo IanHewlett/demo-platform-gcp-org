@@ -12,7 +12,7 @@ locals {
   core_vars        = read_terragrunt_config(find_in_parent_folders("core.hcl"))
   app_vars         = read_terragrunt_config("app.hcl")
   environment      = "${basename(get_terragrunt_dir())}"
-  app_project_name = "sbxdev-mk40"
+  app_project_name = "sbxdev-mk42"
 }
 
 inputs = {

@@ -4,7 +4,7 @@ resource "google_folder" "global" {
 }
 
 module "cicd_project" {
-  source = "../shared/gcp-project-core"
+  source = "../shared/gcp-project"
 
   billing_account_id = var.billing_account_id
   folder_id          = google_folder.global.id

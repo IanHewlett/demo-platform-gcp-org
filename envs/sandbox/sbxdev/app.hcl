@@ -52,6 +52,7 @@ locals {
   ]
   jit_services = [
     "cloudbuild.googleapis.com",
+    "cloudrun.googleapis.com",
     "pubsub.googleapis.com",
     "sqladmin.googleapis.com"
   ]

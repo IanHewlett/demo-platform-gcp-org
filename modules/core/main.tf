@@ -9,7 +9,7 @@ resource "google_folder" "app" {
 }
 
 module "network_project" {
-  source = "../shared/gcp-project-core"
+  source = "../shared/gcp-project"
 
   billing_account_id = var.billing_account_id
   folder_id          = google_folder.core.id
@@ -19,7 +19,7 @@ module "network_project" {
 }
 
 module "security_project" {
-  source = "../shared/gcp-project-core"
+  source = "../shared/gcp-project"
 
   billing_account_id = var.billing_account_id
   folder_id          = google_folder.core.id

@@ -12,8 +12,3 @@ output "number" {
   description = "Project number."
   value       = google_project.this.number
 }
-
-output "subnet" {
-  description = ""
-  value       = google_compute_subnetwork.app_subnet.id
-}

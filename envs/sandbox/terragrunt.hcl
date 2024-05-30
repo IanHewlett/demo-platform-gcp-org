@@ -11,8 +11,8 @@ locals {
   global_vars           = read_terragrunt_config(find_in_parent_folders("global.hcl"))
   core_vars             = read_terragrunt_config("core.hcl")
   environment           = "${basename(get_terragrunt_dir())}"
-  network_project_name  = "sbxnet-mk33"
-  security_project_name = "sbxsec-mk33"
+  network_project_name  = "sbxnet-mk42"
+  security_project_name = "sbxsec-mk42"
 }
 
 inputs = {
