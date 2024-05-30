@@ -1,7 +1,7 @@
 locals {
-  platform = "$platform"
+  platform           = "$platform"
   global_folder_name = "$global_folder_name"
-  tfc_org = "$tfc_org"
+  tfc_org            = "$tfc_org"
   root_folder_num    = "$root_folder_num"
   billing_account_id = "$billing_account_id"
 }
@@ -9,7 +9,7 @@ locals {
 generate "remote_state" {
   path      = "backend.tf"
   if_exists = "overwrite_terragrunt"
-  contents = <<EOF
+  contents  = <<EOF
 terraform {
   cloud {
     organization = "${local.tfc_org}"
@@ -23,9 +23,9 @@ EOF
 }
 
 generate "provider" {
-  path = "provider.tf"
+  path      = "provider.tf"
   if_exists = "overwrite_terragrunt"
-  contents = <<EOF
+  contents  = <<EOF
 provider "google" {
 }
 provider "google-beta" {
