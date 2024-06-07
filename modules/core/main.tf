@@ -38,8 +38,11 @@ module "app_projects_iam" {
   for_each = var.app_project_names
   source   = "../shared/gcp-iam-app"
 
-  project_name = module.app_projects[each.key].name
-  app_roles    = var.app_roles
+  project_name   = module.app_projects[each.key].name
+  project_number = module.app_projects[each.key].number
+  app_roles      = var.app_roles
+  core_sa_email  = var.core_cicd_sa_email
+  groups         = var.groups
 }
 
 module "app_folder_iam" {
