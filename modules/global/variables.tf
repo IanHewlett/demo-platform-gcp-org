@@ -32,3 +32,18 @@ variable "core_roles" {
   description = ""
   type        = set(string)
 }
+
+variable "groups" {
+  description = "Map of short group name to full google group name"
+  type        = map(string)
+}
+
+variable "root_folder_roles" {
+  description = ""
+  type        = set(string)
+}
+
+variable "environment" {
+  description = ""
+  type        = string
+}

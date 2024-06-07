@@ -26,6 +26,17 @@ locals {
     "cloudbuild.googleapis.com",
     "secretmanager.googleapis.com"
   ]
+  root_folder_roles = [
+    "roles/billing.projectManager",
+    "roles/resourcemanager.projectCreator",
+    "roles/serviceusage.serviceUsageAdmin",
+    "roles/iam.serviceAccountAdmin",
+    "roles/storage.admin",
+    "roles/compute.xpnAdmin",
+    "roles/iam.serviceAccountUser",
+    "roles/resourcemanager.folderAdmin",
+    "roles/resourcemanager.projectIamAdmin"
+  ]
   core_roles = [
     "roles/cloudbuild.builds.builder",
     "roles/cloudbuild.builds.editor",
@@ -37,4 +48,9 @@ locals {
     "roles/serviceusage.serviceUsageAdmin",
     "roles/storage.objectAdmin"
   ]
+  groups = {
+    "admins"     = "group:iwh_access_gcp_app_admins@ianwhewlett.com",
+    "developers" = "group:iwh_access_gcp_app_developers@ianwhewlett.com",
+    "viewers"    = "group:iwh_access_gcp_app_viewers@ianwhewlett.com"
+  }
 }

@@ -5,7 +5,7 @@ include "root" {
 
 locals {
   global_vars       = read_terragrunt_config("global.hcl")
-  cicd_project_name = "sbxcicd-mk42"
+  cicd_project_name = "sbxcicd-mk53"
 }
 
 inputs = {
@@ -16,6 +16,9 @@ inputs = {
   project_services   = local.global_vars.locals.project_services
   jit_services       = local.global_vars.locals.jit_services
   core_roles         = local.global_vars.locals.core_roles
+  groups             = local.global_vars.locals.groups
+  root_folder_roles  = local.global_vars.locals.root_folder_roles
+  environment        = "global"
 }
 
 terraform {

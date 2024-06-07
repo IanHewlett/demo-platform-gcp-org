@@ -1,8 +1,3 @@
-output "core_folder_id" {
-  description = "folder id"
-  value       = google_folder.core.id
-}
-
 output "app_folder_id" {
   description = "folder id"
   value       = google_folder.app.id

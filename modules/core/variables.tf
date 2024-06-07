@@ -3,7 +3,7 @@ variable "billing_account_id" {
   type        = string
 }
 
-variable "project_folder_id" {
+variable "core_folder_id" {
   description = ""
   type        = string
 }
@@ -46,4 +46,38 @@ variable "core_subnet_cidr" {
 variable "serverless_subnet_cidr" {
   description = ""
   type        = string
+}
+
+variable "groups" {
+  description = "Map of short group name to full google group name"
+  type        = map(string)
+}
+
+variable "core_cicd_sa_email" {
+  description = ""
+  type        = string
+}
+
+variable "app_project_names" {
+  description = ""
+  type        = set(string)
+}
+
+variable "app_services" {
+  description = "Service APIs enabled by default in the app-environment projects."
+  type        = list(string)
+}
+
+variable "app_jit_services" {
+  description = ""
+  type        = set(string)
+}
+
+variable "app_roles" {
+  description = ""
+  type        = set(string)
+}
+
+variable "app_subnet_cidrs" {
+  type = map(string)
 }

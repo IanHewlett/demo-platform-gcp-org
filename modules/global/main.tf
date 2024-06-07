@@ -13,26 +13,33 @@ module "cicd_project" {
   jit_services       = var.jit_services
 }
 
-resource "google_service_account" "core_service_account" {
-  account_id   = "terraform-sa-${module.cicd_project.name}"
-  display_name = "Terraform-managed."
-  description  = "Privileged Core Terraform service account"
-  project      = module.cicd_project.name
-}
-
-resource "google_project_iam_binding" "project_iam_authoritative" {
-  for_each = var.core_roles
-
-  project = module.cicd_project.name
-  role    = each.key
-
-  members = [
-    "serviceAccount:${google_service_account.core_service_account.email}"
-  ]
-}
-
 module "cloud_build" {
   source = "../shared/gcp-cloud-build"
 
   cicd_project_name = module.cicd_project.name
+}
+
+resource "google_folder" "core" {
+  display_name = var.environment
+  parent       = google_folder.global.id
+}
+
+module "core_folder_iam" {
+  source  = "terraform-google-modules/iam/google//modules/folders_iam"
+  version = "7.7.1"
+
+  folders = [google_folder.core.id]
+  mode    = "authoritative"
+
+  bindings = {
+    "roles/storage.admin" = [
+      "serviceAccount:${google_service_account.core_service_account.email}"
+    ]
+    "roles/compute.networkAdmin" = [
+      "serviceAccount:${google_service_account.core_service_account.email}"
+    ]
+    "roles/logging.admin" = [
+      "serviceAccount:${google_service_account.core_service_account.email}"
+    ]
+  }
 }
