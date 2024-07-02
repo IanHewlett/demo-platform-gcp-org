@@ -145,6 +145,23 @@ module "load_balancer" {
   environment                = var.environment
 }
 
+module "workflow" {
+  source = "../shared/gcp-workflow"
+
+  project_name    = var.app_project_name
+  project_number  = "508747128547"
+  region          = var.gcp_region
+  trigger_buckets = ["proto-legion-sbxdev-upload"]
+
+  service_account_roles = [
+    "roles/eventarc.eventReceiver",
+    "roles/logging.logWriter",
+    "roles/run.invoker",
+    "roles/storage.objectUser",
+    "roles/workflows.invoker"
+  ]
+}
+
 module "notifications" {
   source = "../shared/gcp-notifications"
 
