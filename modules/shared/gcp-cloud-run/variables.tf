@@ -16,5 +16,4 @@ variable "cloud_run_service_name" {
 variable "service_account_roles" {
   type        = list(string)
   description = "Roles for the runtime service account"
-  default     = []
 }
