@@ -1,6 +1,7 @@
 locals {
   project_services = [
     "admin.googleapis.com",
+    "artifactregistry.googleapis.com",
     "cloudbilling.googleapis.com",
     "cloudbuild.googleapis.com",
     "clouddeploy.googleapis.com",

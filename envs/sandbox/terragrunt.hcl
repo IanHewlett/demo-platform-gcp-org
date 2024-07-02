@@ -10,14 +10,14 @@ dependency "global" {
 locals {
   global_vars           = read_terragrunt_config(find_in_parent_folders("global.hcl"))
   environment           = "${basename(get_terragrunt_dir())}"
-  network_project_name  = "sbxnet-mk53"
-  security_project_name = "sbxsec-mk53"
+  network_project_name  = "sbxnet-mk0"
+  security_project_name = "sbxsec-mk0"
   app_project_names = [
-    "sbxdev-mk53"
+    "sbxdev-mk0"
   ]
   app_subnet_cidrs = {
-    "sbxdev-mk53" : "172.16.32.0/24"
-    "sbxqa-mk53" : "172.16.33.0/24"
+    "sbxdev-mk0" : "172.16.32.0/24"
+    "sbxqa-mk0" : "172.16.33.0/24"
   }
 }
 
@@ -40,8 +40,10 @@ inputs = {
   app_services = [
     "admin.googleapis.com",
     "apigateway.googleapis.com",
+    "artifactregistry.googleapis.com",
     "cloudbilling.googleapis.com",
     "cloudbuild.googleapis.com",
+    "cloudfunctions.googleapis.com",
     "cloudresourcemanager.googleapis.com",
     "cloudscheduler.googleapis.com",
     "cloudshell.googleapis.com",
@@ -51,7 +53,6 @@ inputs = {
     "iamcredentials.googleapis.com",
     "iap.googleapis.com",
     "identitytoolkit.googleapis.com",
-    "logging.googleapis.com",
     "logging.googleapis.com",
     "monitoring.googleapis.com",
     "networkmanagement.googleapis.com",
@@ -67,6 +68,7 @@ inputs = {
     "storage.googleapis.com",
     "vpcaccess.googleapis.com",
     "workflows.googleapis.com",
+    "workflowexecutions.googleapis.com",
   ]
   app_jit_services = [
     "cloudbuild.googleapis.com",

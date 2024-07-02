@@ -9,5 +9,5 @@ output "core_folder_id" {
 }
 
 output "cicd_sa_email" {
-  value = google_service_account.core_service_account.email
+  value = module.core_cicd_service_account.email
 }
