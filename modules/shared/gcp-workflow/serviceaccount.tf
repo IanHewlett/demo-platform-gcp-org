@@ -2,7 +2,6 @@ module "workflow_service_account" {
   source = "../gcp-service-account"
 
   project_id   = var.project_name
-  region       = var.region
   account_id   = "workflow-sa"
   display_name = "Workflow Service Account"
   description  = ""
