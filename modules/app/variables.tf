@@ -30,5 +30,10 @@ variable "allocated_ip_range" {
 
 variable "alert_recipients" {
   type        = list(string)
-  description = "List of email alert recipients."
+  description = "List of email alert recipients"
+}
+
+variable "storage_users" {
+  description = "List of storage users"
+  type        = list(string)
 }

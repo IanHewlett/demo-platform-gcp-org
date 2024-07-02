@@ -1,3 +1,91 @@
+module "storage_bucket_upload" {
+  source = "../shared/gcp-storage-bucket"
+
+  bucket_name_prefix = "proto-legion"
+  bucket_name        = "upload"
+  environment        = var.environment
+  project            = var.app_project_name
+  region             = var.gcp_region
+  storage_class      = "STANDARD"
+  versioning         = false
+
+  storageLegacyBucketReaders = [
+    "serviceAccount:${module.cloud_run_file_service.service_runner_email}",
+    "serviceAccount:${module.cloud_run_api_service.service_runner_email}"
+  ]
+  storageObjectViewers = [
+    "serviceAccount:${module.cloud_run_file_service.service_runner_email}"
+  ]
+  storageObjectUsers = []
+  storageObjectAdmins = [
+    "serviceAccount:${module.cloud_run_api_service.service_runner_email}"
+  ]
+  storageAdmins = []
+}
+
+module "storage_bucket_output" {
+  source = "../shared/gcp-storage-bucket"
+
+  bucket_name_prefix = "proto-legion"
+  bucket_name        = "output"
+  environment        = var.environment
+  project            = var.app_project_name
+  region             = var.gcp_region
+  storage_class      = "STANDARD"
+  versioning         = false
+
+  storageLegacyBucketReaders = [
+    "serviceAccount:${module.cloud_run_file_service.service_runner_email}"
+  ]
+  storageObjectViewers = []
+  storageObjectUsers = concat(
+    var.storage_users,
+    ["serviceAccount:${module.cloud_run_file_service.service_runner_email}"]
+  )
+  storageObjectAdmins = []
+  storageAdmins       = []
+}
+
+module "storage_bucket_reject" {
+  source = "../shared/gcp-storage-bucket"
+
+  bucket_name_prefix = "proto-legion"
+  bucket_name        = "reject"
+  environment        = var.environment
+  project            = var.app_project_name
+  region             = var.gcp_region
+  storage_class      = "STANDARD"
+  versioning         = false
+
+  storageLegacyBucketReaders = []
+  storageObjectViewers       = []
+  storageObjectUsers         = var.storage_users
+  storageObjectAdmins        = []
+  storageAdmins              = []
+}
+
+module "storage_bucket_archive" {
+  source = "../shared/gcp-storage-bucket"
+
+  bucket_name_prefix = "proto-legion"
+  bucket_name        = "archive"
+  environment        = var.environment
+  project            = var.app_project_name
+  region             = var.gcp_region
+  storage_class      = "STANDARD"
+  versioning         = true
+
+  storageLegacyBucketReaders = [
+    "serviceAccount:${module.cloud_run_api_service.service_runner_email}"
+  ]
+  storageObjectViewers = [
+    "serviceAccount:${module.cloud_run_api_service.service_runner_email}"
+  ]
+  storageObjectUsers  = []
+  storageObjectAdmins = []
+  storageAdmins       = []
+}
+
 module "cloud_run_file_service" {
   source = "../shared/gcp-cloud-run"
 
