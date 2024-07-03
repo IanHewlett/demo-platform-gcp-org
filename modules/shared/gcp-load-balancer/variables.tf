@@ -19,7 +19,7 @@ variable "environment" {
 }
 
 variable "oauth_brand" {
-  type        = string
+  type = string
 }
 
 variable "cloud_run_service_name_api" {

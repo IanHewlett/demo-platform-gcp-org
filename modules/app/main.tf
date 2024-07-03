@@ -143,6 +143,30 @@ module "load_balancer" {
   domains                    = var.domains
   gcp_region                 = var.gcp_region
   environment                = var.environment
+  oauth_brand                = "projects/508747128547/brands/508747128547"
+}
+
+module "bastion_host" {
+  source = "../shared/gcp-bastion-host"
+
+  project         = var.app_project_name
+  region          = var.gcp_region
+  environment     = var.environment
+  private_network = data.google_compute_network.shared_network.id
+  subnet          = data.google_compute_subnetwork.env_subnet.id
+
+  bastion_host_accessors = [var.groups["developers"]]
+
+  api_db_config = {
+    instance_connection = module.cloudsql_api_service.cloudsql_instance_connection
+    db_name             = module.cloudsql_api_service.db_name
+    db_user_secret      = module.cloudsql_api_service.db_user_secret
+    db_pass_secret      = module.cloudsql_api_service.db_pass_secret
+  }
+
+  service_account_roles = [
+    "roles/cloudsql.client"
+  ]
 }
 
 module "workflow" {

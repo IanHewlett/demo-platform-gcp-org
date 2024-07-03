@@ -37,3 +37,12 @@ variable "storage_users" {
   description = "List of storage users"
   type        = list(string)
 }
+
+variable "groups" {
+  description = "Map of short group name to full google group name"
+  type        = map(string)
+}
+
+variable "app_subnet" {
+  type = string
+}
