@@ -18,6 +18,10 @@ variable "environment" {
   type        = string
 }
 
+variable "oauth_brand" {
+  type        = string
+}
+
 variable "cloud_run_service_name_api" {
   type        = string
   description = "Google Cloud Run service name"

@@ -32,6 +32,11 @@ resource "google_compute_region_network_endpoint_group" "serverless_ui" {
   }
 }
 
+resource "google_iap_client" "iap_client" {
+  display_name = "Terraform-managed IAP client"
+  brand        = var.oauth_brand
+}
+
 resource "google_compute_backend_service" "api" {
   name      = "ingress-${var.environment}-api"
   port_name = "http"
@@ -40,6 +45,11 @@ resource "google_compute_backend_service" "api" {
 
   backend {
     group = google_compute_region_network_endpoint_group.serverless_api.id
+  }
+
+  iap {
+    oauth2_client_id     = google_iap_client.iap_client.client_id
+    oauth2_client_secret = google_iap_client.iap_client.secret
   }
 }
 
@@ -51,6 +61,11 @@ resource "google_compute_backend_service" "ui" {
 
   backend {
     group = google_compute_region_network_endpoint_group.serverless_ui.id
+  }
+
+  iap {
+    oauth2_client_id     = google_iap_client.iap_client.client_id
+    oauth2_client_secret = google_iap_client.iap_client.secret
   }
 }
 
