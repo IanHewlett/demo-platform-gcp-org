@@ -10,14 +10,14 @@ dependency "global" {
 locals {
   global_vars           = read_terragrunt_config(find_in_parent_folders("global.hcl"))
   environment           = "${basename(get_terragrunt_dir())}"
-  network_project_name  = "sbxnet-mk1b"
-  security_project_name = "sbxsec-mk1b"
+  network_project_name  = "sbxnet-mk1c"
+  security_project_name = "sbxsec-mk1c"
   app_project_names = [
-    "sbxdev-mk1b"
+    "sbxdev-mk1c"
   ]
   app_subnet_cidrs = {
-    "sbxdev-mk1b" : "172.16.32.0/24"
-    "sbxqa-mk1b" : "172.16.33.0/24"
+    "sbxdev-mk1c" : "172.16.32.0/24"
+    "sbxqa-mk1c" : "172.16.33.0/24"
   }
 }
 

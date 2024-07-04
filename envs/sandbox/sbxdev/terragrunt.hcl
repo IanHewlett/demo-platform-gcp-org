@@ -10,7 +10,7 @@ dependency "core" {
 locals {
   global_vars      = read_terragrunt_config(find_in_parent_folders("global.hcl"))
   environment      = "${basename(get_terragrunt_dir())}"
-  app_project_name = "sbxdev-mk1b"
+  app_project_name = "sbxdev-mk1c"
 }
 
 inputs = {

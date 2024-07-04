@@ -32,11 +32,6 @@ resource "google_compute_region_network_endpoint_group" "serverless_ui" {
   }
 }
 
-resource "google_iap_client" "iap_client" {
-  display_name = "Terraform-managed IAP client"
-  brand        = var.oauth_brand
-}
-
 resource "google_compute_backend_service" "api" {
   name      = "ingress-${var.environment}-api"
   port_name = "http"
