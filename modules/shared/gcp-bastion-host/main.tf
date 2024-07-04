@@ -24,7 +24,7 @@ resource "google_compute_instance" "bastion_host" {
   }
 
   service_account {
-    email = module.bastion_host_service_account.email
+    email = var.bastion_host_sa
 
     scopes = ["cloud-platform"]
   }

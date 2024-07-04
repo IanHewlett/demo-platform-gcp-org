@@ -10,15 +10,15 @@ module "storage_bucket_upload" {
   versioning         = false
 
   storageLegacyBucketReaders = [
-    "serviceAccount:${module.cloud_run_file_service.service_runner_email}",
-    "serviceAccount:${module.cloud_run_api_service.service_runner_email}"
+    module.file_service_service_account.sa_member,
+    module.api_service_service_account.sa_member
   ]
   storageObjectViewers = [
-    "serviceAccount:${module.cloud_run_file_service.service_runner_email}"
+    module.file_service_service_account.sa_member
   ]
   storageObjectUsers = []
   storageObjectAdmins = [
-    "serviceAccount:${module.cloud_run_api_service.service_runner_email}"
+    module.api_service_service_account.sa_member
   ]
   storageAdmins = []
 }
@@ -35,12 +35,12 @@ module "storage_bucket_output" {
   versioning         = false
 
   storageLegacyBucketReaders = [
-    "serviceAccount:${module.cloud_run_file_service.service_runner_email}"
+    module.file_service_service_account.sa_member
   ]
   storageObjectViewers = []
   storageObjectUsers = concat(
     var.storage_users,
-    ["serviceAccount:${module.cloud_run_file_service.service_runner_email}"]
+    [module.file_service_service_account.sa_member]
   )
   storageObjectAdmins = []
   storageAdmins       = []
@@ -76,10 +76,10 @@ module "storage_bucket_archive" {
   versioning         = true
 
   storageLegacyBucketReaders = [
-    "serviceAccount:${module.cloud_run_api_service.service_runner_email}"
+    module.api_service_service_account.sa_member
   ]
   storageObjectViewers = [
-    "serviceAccount:${module.cloud_run_api_service.service_runner_email}"
+    module.api_service_service_account.sa_member
   ]
   storageObjectUsers  = []
   storageObjectAdmins = []
@@ -92,10 +92,6 @@ module "cloud_run_file_service" {
   project_name           = var.app_project_name
   gcp_region             = var.gcp_region
   cloud_run_service_name = "app-file-service"
-
-  service_account_roles = [
-    "roles/cloudtrace.agent"
-  ]
 }
 
 module "cloud_run_api_service" {
@@ -104,12 +100,6 @@ module "cloud_run_api_service" {
   project_name           = var.app_project_name
   gcp_region             = var.gcp_region
   cloud_run_service_name = "app-api-service"
-
-  service_account_roles = [
-    "roles/cloudsql.client",
-    "roles/cloudsql.viewer",
-    "roles/cloudtrace.agent"
-  ]
 }
 
 module "cloud_run_ui_service" {
@@ -118,8 +108,6 @@ module "cloud_run_ui_service" {
   project_name           = var.app_project_name
   gcp_region             = var.gcp_region
   cloud_run_service_name = "app-ui-service"
-
-  service_account_roles = []
 }
 
 module "cloudsql_api_service" {
@@ -130,7 +118,7 @@ module "cloudsql_api_service" {
   allocated_ip_range     = var.allocated_ip_range
   db_tier                = "db-custom-1-3840"
   environment            = var.environment
-  api_service_account    = module.cloud_run_api_service.service_runner_email
+  api_service_account    = module.api_service_service_account.email
   shared_network_project = var.host_vpc
 }
 
@@ -149,12 +137,12 @@ module "load_balancer" {
 module "bastion_host" {
   source = "../shared/gcp-bastion-host"
 
-  project         = var.app_project_name
-  region          = var.gcp_region
-  environment     = var.environment
-  private_network = data.google_compute_network.shared_network.id
-  subnet          = data.google_compute_subnetwork.env_subnet.id
-
+  project                = var.app_project_name
+  region                 = var.gcp_region
+  environment            = var.environment
+  private_network        = data.google_compute_network.shared_network.id
+  subnet                 = data.google_compute_subnetwork.env_subnet.id
+  bastion_host_sa        = module.bastion_host_service_account.email
   bastion_host_accessors = [var.groups["developers"]]
 
   api_db_config = {
@@ -163,27 +151,15 @@ module "bastion_host" {
     db_user_secret      = module.cloudsql_api_service.db_user_secret
     db_pass_secret      = module.cloudsql_api_service.db_pass_secret
   }
-
-  service_account_roles = [
-    "roles/cloudsql.client"
-  ]
 }
 
 module "workflow" {
   source = "../shared/gcp-workflow"
 
   project_name    = var.app_project_name
-  project_number  = "508747128547"
   region          = var.gcp_region
+  workflow_sa     = module.workflow_service_account.email
   trigger_buckets = ["proto-legion-sbxdev-upload"]
-
-  service_account_roles = [
-    "roles/eventarc.eventReceiver",
-    "roles/logging.logWriter",
-    "roles/run.invoker",
-    "roles/storage.objectUser",
-    "roles/workflows.invoker"
-  ]
 }
 
 module "notifications" {

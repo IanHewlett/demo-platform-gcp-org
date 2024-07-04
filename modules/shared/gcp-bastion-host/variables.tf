@@ -32,7 +32,6 @@ variable "subnet" {
   description = "Fully qualified resource name of the app-environment subnet"
 }
 
-variable "service_account_roles" {
-  type        = list(string)
-  description = "Roles for the runtime service account"
+variable "bastion_host_sa" {
+  type = string
 }

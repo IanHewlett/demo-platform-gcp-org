@@ -3,7 +3,7 @@ resource "google_workflows_workflow" "file_processing_workflow" {
   project         = var.project_name
   region          = var.region
   description     = "File Processing Workflow"
-  service_account = module.workflow_service_account.name
+  service_account = var.workflow_sa
 
   user_env_vars = {
     url = "https://timeapi.io/api/Time/current/zone?timeZone=Europe/Amsterdam"
@@ -46,7 +46,7 @@ resource "google_eventarc_trigger" "file-intake-trigger" {
   project                 = var.project_name
   location                = var.region
   event_data_content_type = "application/json"
-  service_account         = module.workflow_service_account.email
+  service_account         = var.workflow_sa
 
   matching_criteria {
     attribute = "type"
