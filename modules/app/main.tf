@@ -4,7 +4,7 @@ module "storage_bucket_upload" {
   bucket_name_prefix = "proto-legion"
   bucket_name        = "upload"
   environment        = var.environment
-  project            = var.app_project_name
+  project            = data.google_project.app_project.name
   region             = var.gcp_region
   storage_class      = "STANDARD"
   versioning         = false
@@ -29,7 +29,7 @@ module "storage_bucket_output" {
   bucket_name_prefix = "proto-legion"
   bucket_name        = "output"
   environment        = var.environment
-  project            = var.app_project_name
+  project            = data.google_project.app_project.name
   region             = var.gcp_region
   storage_class      = "STANDARD"
   versioning         = false
@@ -52,7 +52,7 @@ module "storage_bucket_reject" {
   bucket_name_prefix = "proto-legion"
   bucket_name        = "reject"
   environment        = var.environment
-  project            = var.app_project_name
+  project            = data.google_project.app_project.name
   region             = var.gcp_region
   storage_class      = "STANDARD"
   versioning         = false
@@ -70,7 +70,7 @@ module "storage_bucket_archive" {
   bucket_name_prefix = "proto-legion"
   bucket_name        = "archive"
   environment        = var.environment
-  project            = var.app_project_name
+  project            = data.google_project.app_project.name
   region             = var.gcp_region
   storage_class      = "STANDARD"
   versioning         = true
@@ -89,7 +89,7 @@ module "storage_bucket_archive" {
 module "cloud_run_file_service" {
   source = "../shared/gcp-cloud-run"
 
-  project_name           = var.app_project_name
+  project_name           = data.google_project.app_project.name
   gcp_region             = var.gcp_region
   cloud_run_service_name = "app-file-service"
 }
@@ -97,7 +97,7 @@ module "cloud_run_file_service" {
 module "cloud_run_api_service" {
   source = "../shared/gcp-cloud-run"
 
-  project_name           = var.app_project_name
+  project_name           = data.google_project.app_project.name
   gcp_region             = var.gcp_region
   cloud_run_service_name = "app-api-service"
 }
@@ -105,7 +105,7 @@ module "cloud_run_api_service" {
 module "cloud_run_ui_service" {
   source = "../shared/gcp-cloud-run"
 
-  project_name           = var.app_project_name
+  project_name           = data.google_project.app_project.name
   gcp_region             = var.gcp_region
   cloud_run_service_name = "app-ui-service"
 }
@@ -113,7 +113,7 @@ module "cloud_run_ui_service" {
 module "cloudsql_api_service" {
   source = "../shared/gcp-cloudsql"
 
-  project_name           = var.app_project_name
+  project_name           = data.google_project.app_project.name
   gcp_region             = var.gcp_region
   allocated_ip_range     = var.allocated_ip_range
   db_tier                = "db-custom-1-3840"
@@ -125,19 +125,19 @@ module "cloudsql_api_service" {
 module "load_balancer" {
   source = "../shared/gcp-load-balancer"
 
-  project_name               = var.app_project_name
+  project_name               = data.google_project.app_project.name
   cloud_run_service_name_ui  = module.cloud_run_ui_service.cloud_run_service_name
   cloud_run_service_name_api = module.cloud_run_api_service.cloud_run_service_name
   domains                    = var.domains
   gcp_region                 = var.gcp_region
   environment                = var.environment
-  oauth_brand                = "projects/508747128547/brands/508747128547"
+  oauth_brand                = "projects/${data.google_project.app_project.number}/brands/${data.google_project.app_project.number}"
 }
 
 module "bastion_host" {
   source = "../shared/gcp-bastion-host"
 
-  project                = var.app_project_name
+  project                = data.google_project.app_project.name
   region                 = var.gcp_region
   environment            = var.environment
   private_network        = data.google_compute_network.shared_network.id
@@ -156,7 +156,7 @@ module "bastion_host" {
 module "workflow" {
   source = "../shared/gcp-workflow"
 
-  project_name    = var.app_project_name
+  project_name    = data.google_project.app_project.name
   region          = var.gcp_region
   workflow_sa     = module.workflow_service_account.email
   trigger_buckets = ["proto-legion-sbxdev-upload"]
@@ -165,7 +165,7 @@ module "workflow" {
 module "notifications" {
   source = "../shared/gcp-notifications"
 
-  project          = var.app_project_name
+  project          = data.google_project.app_project.name
   environment      = var.environment
   alert_recipients = var.alert_recipients
 }
@@ -173,6 +173,6 @@ module "notifications" {
 module "monitoring_dashboard" {
   source = "../shared/gcp-monitoring-dashboard"
 
-  project_name = var.app_project_name
+  project_name = data.google_project.app_project.name
   environment  = var.environment
 }

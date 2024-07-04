@@ -5,7 +5,7 @@ include "root" {
 
 locals {
   global_vars       = read_terragrunt_config("global.hcl")
-  cicd_project_name = "sbxcicd-mk0"
+  cicd_project_name = "sbxcicd-mk1b"
 }
 
 inputs = {

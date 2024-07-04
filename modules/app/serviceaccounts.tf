@@ -1,7 +1,7 @@
 module "file_service_service_account" {
   source = "../shared/gcp-service-account"
 
-  project_id   = var.app_project_name
+  project_id   = data.google_project.app_project.name
   account_id   = "app-file-service-runner"
   display_name = "Runtime service account for app-file-service"
   description  = ""
@@ -14,7 +14,7 @@ module "file_service_service_account" {
 module "api_service_service_account" {
   source = "../shared/gcp-service-account"
 
-  project_id   = var.app_project_name
+  project_id   = data.google_project.app_project.name
   account_id   = "app-api-service-runner"
   display_name = "Runtime service account for app-api-service"
   description  = ""
@@ -29,7 +29,7 @@ module "api_service_service_account" {
 module "ui_service_service_account" {
   source = "../shared/gcp-service-account"
 
-  project_id   = var.app_project_name
+  project_id   = data.google_project.app_project.name
   account_id   = "app-ui-service-runner"
   display_name = "Runtime service account for app-ui-service"
   description  = ""
@@ -40,7 +40,7 @@ module "ui_service_service_account" {
 module "bastion_host_service_account" {
   source = "../shared/gcp-service-account"
 
-  project_id   = var.app_project_name
+  project_id   = data.google_project.app_project.name
   account_id   = "bastion-runner"
   display_name = "Runtime service account for bastion host"
   description  = ""
@@ -59,7 +59,7 @@ resource "google_service_account_iam_binding" "bastion_host_sa_user" {
 module "workflow_service_account" {
   source = "../shared/gcp-service-account"
 
-  project_id   = var.app_project_name
+  project_id   = data.google_project.app_project.name
   account_id   = "workflow-sa"
   display_name = "Workflow Service Account"
   description  = ""
@@ -75,16 +75,16 @@ module "workflow_service_account" {
 
 resource "google_service_account_iam_binding" "pubsub_sa_tokenCreator_binding" {
   role               = "roles/iam.serviceAccountTokenCreator"
-  members            = ["serviceAccount:service-508747128547@gcp-sa-pubsub.iam.gserviceaccount.com"]
+  members            = ["serviceAccount:service-${data.google_project.app_project.number}@gcp-sa-pubsub.iam.gserviceaccount.com"]
   service_account_id = module.workflow_service_account.name
 }
 
 data "google_storage_project_service_account" "gcs_account" {
-  project = var.app_project_name
+  project = data.google_project.app_project.name
 }
 
 resource "google_project_iam_member" "gs_sa_pubsub_binding" {
-  project = var.app_project_name
+  project = data.google_project.app_project.name
   role    = "roles/pubsub.publisher"
   member  = "serviceAccount:${data.google_storage_project_service_account.gcs_account.email_address}"
 }
