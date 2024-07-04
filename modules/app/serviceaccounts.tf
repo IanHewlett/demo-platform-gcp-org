@@ -78,3 +78,13 @@ resource "google_service_account_iam_binding" "pubsub_sa_tokenCreator_binding" {
   members            = ["serviceAccount:service-508747128547@gcp-sa-pubsub.iam.gserviceaccount.com"]
   service_account_id = module.workflow_service_account.name
 }
+
+data "google_storage_project_service_account" "gcs_account" {
+  project = var.app_project_name
+}
+
+resource "google_project_iam_member" "gs_sa_pubsub_binding" {
+  project = var.app_project_name
+  role    = "roles/pubsub.publisher"
+  member  = "serviceAccount:${data.google_storage_project_service_account.gcs_account.email_address}"
+}
