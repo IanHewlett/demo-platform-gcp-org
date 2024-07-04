@@ -1,11 +1,3 @@
-resource "google_project_iam_member" "compute_viewer" {
-  for_each = toset(var.bastion_host_accessors)
-
-  project = var.project
-  role    = "roles/compute.viewer"
-  member  = each.value
-}
-
 resource "google_iap_tunnel_instance_iam_binding" "bastion_host_tunneler" {
   project  = var.project
   zone     = google_compute_instance.bastion_host.zone

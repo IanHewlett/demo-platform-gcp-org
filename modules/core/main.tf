@@ -115,6 +115,9 @@ module "app_project_iam" {
     "roles/compute.networkAdmin" = [
       "serviceAccount:${module.app_cicd_service_account[each.key].email}"
     ]
+    "roles/compute.viewer" = [
+      var.groups["developers"]
+    ]
     "roles/eventarc.admin" = [
       "serviceAccount:${module.app_cicd_service_account[each.key].email}"
     ]
