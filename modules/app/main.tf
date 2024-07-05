@@ -131,7 +131,6 @@ module "load_balancer" {
   domains                    = var.domains
   gcp_region                 = var.gcp_region
   environment                = var.environment
-  oauth_brand                = "projects/${data.google_project.app_project.number}/brands/${data.google_project.app_project.number}"
 }
 
 module "bastion_host" {
