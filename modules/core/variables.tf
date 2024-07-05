@@ -37,16 +37,6 @@ variable "security_project_name" {
   type        = string
 }
 
-variable "project_services" {
-  description = "Service APIs enabled by default in core projects."
-  type        = set(string)
-}
-
-variable "jit_services" {
-  description = ""
-  type        = set(string)
-}
-
 variable "core_subnet_cidr" {
   description = ""
   type        = string

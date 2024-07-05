@@ -58,8 +58,36 @@ module "cicd_project" {
   billing_account_id = var.billing_account_id
   folder_id          = module.global_folder.folder_id
   project_name       = var.cicd_project_name
-  project_services   = var.project_services
-  jit_services       = var.jit_services
+
+  project_services = [
+    "admin.googleapis.com",
+    "artifactregistry.googleapis.com",
+    "cloudbilling.googleapis.com",
+    "cloudbuild.googleapis.com",
+    "clouddeploy.googleapis.com",
+    "cloudidentity.googleapis.com",
+    "cloudresourcemanager.googleapis.com",
+    "cloudscheduler.googleapis.com",
+    "compute.googleapis.com",
+    "groupssettings.googleapis.com",
+    "iam.googleapis.com",
+    "iamcredentials.googleapis.com",
+    "identitytoolkit.googleapis.com",
+    "logging.googleapis.com",
+    "networkmanagement.googleapis.com",
+    "orgpolicy.googleapis.com",
+    "secretmanager.googleapis.com",
+    "servicemanagement.googleapis.com",
+    "servicenetworking.googleapis.com",
+    "serviceusage.googleapis.com",
+    "storage.googleapis.com",
+    "vpcaccess.googleapis.com",
+  ]
+
+  jit_services = [
+    "cloudbuild.googleapis.com",
+    "secretmanager.googleapis.com"
+  ]
 
   bindings = {}
 }
