@@ -1,13 +1,3 @@
-module "network_project" {
-  source = "../shared/gcp-project"
-
-  billing_account_id = var.billing_account_id
-  folder_id          = var.core_folder_id
-  project_name       = var.network_project_name
-  project_services   = var.project_services
-  jit_services       = var.jit_services
-}
-
 module "security_project" {
   source = "../shared/gcp-project"
 
@@ -16,11 +6,59 @@ module "security_project" {
   project_name       = var.security_project_name
   project_services   = var.project_services
   jit_services       = var.jit_services
+
+  bindings = {}
 }
 
-resource "google_folder" "app" {
-  display_name = "app"
-  parent       = var.core_folder_id
+module "network_project" {
+  source = "../shared/gcp-project"
+
+  billing_account_id = var.billing_account_id
+  folder_id          = var.core_folder_id
+  project_name       = var.network_project_name
+  project_services   = var.project_services
+  jit_services       = var.jit_services
+
+  bindings = {
+    "roles/compute.networkAdmin" = [
+      var.groups["admins"]
+    ]
+    "roles/compute.securityAdmin" = [
+      var.groups["admins"],
+      "serviceAccount:${var.core_cicd_sa_email}"
+    ]
+    "roles/compute.networkViewer" = values(module.app_cicd_service_account)[*].sa_member
+    "roles/vpcaccess.admin" = [
+      "serviceAccount:${var.core_cicd_sa_email}"
+    ]
+    "roles/vpcaccess.user" = [
+      for number in values(module.app_projects)[*].number : "serviceAccount:service-${number}@serverless-robot-prod.iam.gserviceaccount.com"
+    ]
+  }
+}
+
+module "app_folder" {
+  source = "../shared/gcp-folder"
+
+  folder_name      = "app"
+  parent_folder_id = var.core_folder_id
+
+  bindings = {
+    "roles/storage.admin" = values(module.app_cicd_service_account)[*].sa_member
+    "roles/logging.admin" = concat(
+      ["serviceAccount:${var.core_cicd_sa_email}"],
+      values(module.app_cicd_service_account)[*].sa_member
+    )
+    "roles/iap.admin" = [
+      var.groups["admins"]
+    ]
+    "roles/oauthconfig.editor" = [
+      var.groups["admins"]
+    ]
+    "roles/compute.viewer" = [
+      var.groups["developers"]
+    ]
+  }
 }
 
 module "app_projects" {
@@ -28,134 +66,60 @@ module "app_projects" {
   source   = "../shared/gcp-project"
 
   billing_account_id = var.billing_account_id
-  folder_id          = google_folder.app.id
+  folder_id          = module.app_folder.folder_id
   project_name       = each.key
-  project_services   = var.app_services
-  jit_services       = var.app_jit_services
+
+  project_services = [
+    "admin.googleapis.com",
+    "apigateway.googleapis.com",
+    "artifactregistry.googleapis.com",
+    "cloudbilling.googleapis.com",
+    "cloudbuild.googleapis.com",
+    "cloudfunctions.googleapis.com",
+    "cloudresourcemanager.googleapis.com",
+    "cloudscheduler.googleapis.com",
+    "cloudshell.googleapis.com",
+    "compute.googleapis.com",
+    "eventarc.googleapis.com",
+    "iam.googleapis.com",
+    "iamcredentials.googleapis.com",
+    "iap.googleapis.com",
+    "identitytoolkit.googleapis.com",
+    "logging.googleapis.com",
+    "monitoring.googleapis.com",
+    "networkmanagement.googleapis.com",
+    "orgpolicy.googleapis.com",
+    "osconfig.googleapis.com",
+    "pubsub.googleapis.com",
+    "run.googleapis.com",
+    "secretmanager.googleapis.com",
+    "servicemanagement.googleapis.com",
+    "servicenetworking.googleapis.com",
+    "serviceusage.googleapis.com",
+    "sqladmin.googleapis.com",
+    "storage.googleapis.com",
+    "vpcaccess.googleapis.com",
+    "workflows.googleapis.com",
+    "workflowexecutions.googleapis.com",
+  ]
+
+  jit_services = [
+    "cloudbuild.googleapis.com",
+    "eventarc.googleapis.com",
+    "pubsub.googleapis.com",
+    "sqladmin.googleapis.com"
+  ]
+
+  bindings = {}
 }
 
-module "app_cicd_service_account" {
-  for_each = var.app_project_names
-  source   = "../shared/gcp-service-account"
+#TODO this role is not able to be used on the folder
+resource "google_project_iam_member" "sa_core_cicd_iam_role_admin" {
+  for_each = module.app_projects
 
-  project_id    = module.app_projects[each.key].name
-  account_id    = "terraform-sa-${module.app_projects[each.key].name}"
-  display_name  = "Terraform-managed."
-  description   = "Privileged Terraform service account for app project"
-  project_roles = var.app_roles
-}
-
-module "network_project_iam" {
-  source  = "terraform-google-modules/iam/google//modules/projects_iam"
-  version = "7.7.1"
-
-  projects = [module.network_project.name]
-  mode     = "authoritative"
-  bindings = {
-    "roles/compute.networkAdmin" = [
-      var.groups["admins"]
-    ]
-    "roles/compute.networkViewer" = values(module.app_cicd_service_account)[*].sa_member
-    "roles/compute.securityAdmin" = [
-      var.groups["admins"],
-      "serviceAccount:${var.core_cicd_sa_email}"
-    ]
-    "roles/vpcaccess.admin" = [
-      "serviceAccount:${var.core_cicd_sa_email}"
-    ]
-    "roles/vpcaccess.user" = [for number in values(module.app_projects)[*].number : "serviceAccount:service-${number}@serverless-robot-prod.iam.gserviceaccount.com"]
-  }
-}
-
-module "app_folder_iam" {
-  for_each = var.app_project_names
-  source   = "terraform-google-modules/iam/google//modules/folders_iam"
-  version  = "7.7.1"
-
-  folders = [google_folder.app.id]
-  mode    = "authoritative"
-  bindings = {
-    "roles/storage.admin" = [
-      "serviceAccount:${module.app_cicd_service_account[each.key].email}"
-    ]
-    "roles/logging.admin" = [
-      "serviceAccount:${var.core_cicd_sa_email}",
-      "serviceAccount:${module.app_cicd_service_account[each.key].email}"
-    ]
-  }
-}
-
-module "app_project_iam" {
-  for_each = var.app_project_names
-  source   = "terraform-google-modules/iam/google//modules/projects_iam"
-  version  = "7.7.1"
-
-  projects = [module.app_projects[each.key].name]
-  mode     = "additive"
-
-  bindings = {
-    "roles/iap.admin" = [
-      var.groups["admins"]
-    ]
-    "roles/oauthconfig.editor" = [
-      var.groups["admins"]
-    ]
-    "roles/cloudscheduler.admin" = [
-      "serviceAccount:${module.app_cicd_service_account[each.key].email}"
-    ]
-    "roles/cloudsql.admin" = [
-      "serviceAccount:${module.app_cicd_service_account[each.key].email}"
-    ]
-    "roles/compute.instanceAdmin" = [
-      "serviceAccount:${module.app_cicd_service_account[each.key].email}"
-    ]
-    "roles/compute.loadBalancerAdmin" = [
-      "serviceAccount:${module.app_cicd_service_account[each.key].email}"
-    ]
-    "roles/compute.networkAdmin" = [
-      "serviceAccount:${module.app_cicd_service_account[each.key].email}"
-    ]
-    "roles/compute.viewer" = [
-      var.groups["developers"]
-    ]
-    "roles/eventarc.admin" = [
-      "serviceAccount:${module.app_cicd_service_account[each.key].email}"
-    ]
-    "roles/iam.roleAdmin" = [
-      "serviceAccount:${var.core_cicd_sa_email}",
-      "serviceAccount:${module.app_cicd_service_account[each.key].email}"
-    ]
-    "roles/iam.securityAdmin" = [
-      "serviceAccount:${module.app_cicd_service_account[each.key].email}"
-    ]
-    "roles/iam.serviceAccountAdmin" = [
-      "serviceAccount:${module.app_cicd_service_account[each.key].email}"
-    ]
-    "roles/iam.serviceAccountUser" = [
-      "serviceAccount:${module.app_cicd_service_account[each.key].email}",
-    ]
-    "roles/monitoring.admin" = [
-      "serviceAccount:${module.app_cicd_service_account[each.key].email}"
-    ]
-    "roles/resourcemanager.projectIamAdmin" = [
-      "serviceAccount:${module.app_cicd_service_account[each.key].email}"
-    ]
-    "roles/run.admin" = [
-      "serviceAccount:${module.app_cicd_service_account[each.key].email}"
-    ]
-    "roles/secretmanager.admin" = [
-      "serviceAccount:${module.app_cicd_service_account[each.key].email}"
-    ]
-    "roles/serviceusage.serviceUsageAdmin" = [
-      "serviceAccount:${module.app_cicd_service_account[each.key].email}"
-    ]
-    "roles/storage.hmacKeyAdmin" = [
-      "serviceAccount:${module.app_cicd_service_account[each.key].email}"
-    ]
-    "roles/workflows.admin" = [
-      "serviceAccount:${module.app_cicd_service_account[each.key].email}"
-    ]
-  }
+  project = each.value.name
+  role    = "roles/iam.roleAdmin"
+  member  = "serviceAccount:${var.core_cicd_sa_email}"
 }
 
 module "shared_vpc" {

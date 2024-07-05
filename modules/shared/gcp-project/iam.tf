@@ -1,3 +1,11 @@
+resource "google_project_iam_binding" "project_iam_authoritative" {
+  for_each = var.bindings
+
+  project = google_project.this.name
+  role    = each.key
+  members = each.value
+}
+
 resource "google_project_service_identity" "servicenetworking_jit_si" {
   provider = google-beta
 

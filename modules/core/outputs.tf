@@ -1,6 +1,6 @@
 output "app_folder_id" {
   description = "folder id"
-  value       = google_folder.app.id
+  value       = module.app_folder.folder_id
 }
 
 output "network_project_name" {

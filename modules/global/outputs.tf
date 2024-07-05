@@ -1,11 +1,11 @@
 output "project_folder_id" {
   description = "folder id"
-  value       = google_folder.global.id
+  value       = module.global_folder.folder_id
 }
 
 output "core_folder_id" {
   description = "folder id"
-  value       = google_folder.core.id
+  value       = module.core_folder.folder_id
 }
 
 output "cicd_sa_email" {

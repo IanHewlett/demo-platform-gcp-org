@@ -15,6 +15,15 @@ variable "gcp_region" {
 
 variable "environment" {
   description = ""
+}
+
+variable "groups" {
+  description = "Map of short group name to full google group name"
+  type        = map(string)
+}
+
+variable "core_cicd_sa_email" {
+  description = ""
   type        = string
 }
 
@@ -48,32 +57,7 @@ variable "serverless_subnet_cidr" {
   type        = string
 }
 
-variable "groups" {
-  description = "Map of short group name to full google group name"
-  type        = map(string)
-}
-
-variable "core_cicd_sa_email" {
-  description = ""
-  type        = string
-}
-
 variable "app_project_names" {
-  description = ""
-  type        = set(string)
-}
-
-variable "app_services" {
-  description = "Service APIs enabled by default in the app-environment projects."
-  type        = list(string)
-}
-
-variable "app_jit_services" {
-  description = ""
-  type        = set(string)
-}
-
-variable "app_roles" {
   description = ""
   type        = set(string)
 }

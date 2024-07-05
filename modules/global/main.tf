@@ -1,43 +1,37 @@
-resource "google_folder" "global" {
-  display_name = var.global_folder_name
-  parent       = var.root_folder_num
-}
+module "global_folder" {
+  source = "../shared/gcp-folder"
 
-module "cicd_project" {
-  source = "../shared/gcp-project"
+  folder_name      = var.global_folder_name
+  parent_folder_id = var.root_folder_num
 
-  billing_account_id = var.billing_account_id
-  folder_id          = google_folder.global.id
-  project_name       = var.cicd_project_name
-  project_services   = var.project_services
-  jit_services       = var.jit_services
-}
-
-module "core_cicd_service_account" {
-  source = "../shared/gcp-service-account"
-
-  project_id    = module.cicd_project.name
-  account_id    = "terraform-sa-core"
-  display_name  = "Terraform-managed."
-  description   = "Privileged Core Terraform service account"
-  project_roles = var.core_roles
-}
-
-resource "google_folder_iam_member" "additive_folder" {
-  for_each = var.root_folder_roles
-
-  folder = google_folder.global.id
-  role   = each.key
-  member = "serviceAccount:${module.core_cicd_service_account.email}"
-}
-
-module "global_folder_iam" {
-  source  = "terraform-google-modules/iam/google//modules/folders_iam"
-  version = "7.7.1"
-
-  folders = [google_folder.global.id]
-  mode    = "additive"
   bindings = {
+    "roles/billing.projectManager" = [
+      "serviceAccount:${module.core_cicd_service_account.email}"
+    ]
+    "roles/resourcemanager.projectCreator" = [
+      "serviceAccount:${module.core_cicd_service_account.email}"
+    ]
+    "roles/resourcemanager.folderAdmin" = [
+      "serviceAccount:${module.core_cicd_service_account.email}"
+    ]
+    "roles/resourcemanager.projectIamAdmin" = [
+      "serviceAccount:${module.core_cicd_service_account.email}"
+    ]
+    "roles/serviceusage.serviceUsageAdmin" = [
+      "serviceAccount:${module.core_cicd_service_account.email}"
+    ]
+    "roles/iam.serviceAccountAdmin" = [
+      "serviceAccount:${module.core_cicd_service_account.email}"
+    ]
+    "roles/iam.serviceAccountUser" = [
+      "serviceAccount:${module.core_cicd_service_account.email}"
+    ]
+    "roles/storage.admin" = [
+      "serviceAccount:${module.core_cicd_service_account.email}"
+    ]
+    "roles/compute.xpnAdmin" = [
+      "serviceAccount:${module.core_cicd_service_account.email}"
+    ]
     "roles/resourcemanager.folderAdmin" = [
       var.groups["admins"]
     ]
@@ -58,12 +52,31 @@ module "global_folder_iam" {
   }
 }
 
-module "tf_cicd_project_iam" {
-  source  = "terraform-google-modules/iam/google//modules/projects_iam"
-  version = "7.7.1"
+module "cicd_project" {
+  source = "../shared/gcp-project"
 
-  projects = [module.cicd_project.name]
-  mode     = "authoritative"
+  billing_account_id = var.billing_account_id
+  folder_id          = module.global_folder.folder_id
+  project_name       = var.cicd_project_name
+  project_services   = var.project_services
+  jit_services       = var.jit_services
+
+  bindings = {}
+}
+
+module "cloud_build" {
+  source = "../shared/gcp-cloud-build"
+
+  cicd_project_name = module.cicd_project.name
+}
+
+#TODO should this be in core tier? else need handling here for nonprod and prod as well
+module "core_folder" {
+  source = "../shared/gcp-folder"
+
+  folder_name      = "sandbox"
+  parent_folder_id = module.global_folder.folder_id
+
   bindings = {
     "roles/storage.objectAdmin" = [
       "serviceAccount:${module.core_cicd_service_account.email}"
@@ -84,6 +97,7 @@ module "tf_cicd_project_iam" {
       "serviceAccount:${module.core_cicd_service_account.email}"
     ]
     "roles/storage.admin" = [
+      "serviceAccount:${module.core_cicd_service_account.email}",
       "serviceAccount:${module.cicd_project.number}@cloudbuild.gserviceaccount.com"
     ]
     "roles/cloudbuild.builds.editor" = [
@@ -93,31 +107,6 @@ module "tf_cicd_project_iam" {
       "serviceAccount:${module.core_cicd_service_account.email}"
     ]
     "roles/logging.logWriter" = [
-      "serviceAccount:${module.core_cicd_service_account.email}"
-    ]
-  }
-}
-
-module "cloud_build" {
-  source = "../shared/gcp-cloud-build"
-
-  cicd_project_name = module.cicd_project.name
-}
-
-resource "google_folder" "core" {
-  display_name = var.environment
-  parent       = google_folder.global.id
-}
-
-module "core_folder_iam" {
-  source  = "terraform-google-modules/iam/google//modules/folders_iam"
-  version = "7.7.1"
-
-  folders = [google_folder.core.id]
-  mode    = "authoritative"
-
-  bindings = {
-    "roles/storage.admin" = [
       "serviceAccount:${module.core_cicd_service_account.email}"
     ]
     "roles/compute.networkAdmin" = [

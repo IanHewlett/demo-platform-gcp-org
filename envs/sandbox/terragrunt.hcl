@@ -10,14 +10,14 @@ dependency "global" {
 locals {
   global_vars           = read_terragrunt_config(find_in_parent_folders("global.hcl"))
   environment           = "${basename(get_terragrunt_dir())}"
-  network_project_name  = "sbxnet-mk1c"
-  security_project_name = "sbxsec-mk1c"
+  network_project_name  = "sbxnet-mk3a"
+  security_project_name = "sbxsec-mk3a"
   app_project_names = [
-    "sbxdev-mk1c"
+    "sbxdev-mk3a"
   ]
   app_subnet_cidrs = {
-    "sbxdev-mk1c" : "172.16.32.0/24"
-    "sbxqa-mk1c" : "172.16.33.0/24"
+    "sbxdev-mk3a" : "172.16.32.0/24"
+    "sbxqa-mk3a" : "172.16.33.0/24"
   }
 }
 
@@ -37,63 +37,6 @@ inputs = {
   app_subnet_cidrs       = local.app_subnet_cidrs
   core_cicd_sa_email     = dependency.global.outputs.cicd_sa_email
   groups                 = local.global_vars.locals.groups
-  app_services = [
-    "admin.googleapis.com",
-    "apigateway.googleapis.com",
-    "artifactregistry.googleapis.com",
-    "cloudbilling.googleapis.com",
-    "cloudbuild.googleapis.com",
-    "cloudfunctions.googleapis.com",
-    "cloudresourcemanager.googleapis.com",
-    "cloudscheduler.googleapis.com",
-    "cloudshell.googleapis.com",
-    "compute.googleapis.com",
-    "eventarc.googleapis.com",
-    "iam.googleapis.com",
-    "iamcredentials.googleapis.com",
-    "iap.googleapis.com",
-    "identitytoolkit.googleapis.com",
-    "logging.googleapis.com",
-    "monitoring.googleapis.com",
-    "networkmanagement.googleapis.com",
-    "orgpolicy.googleapis.com",
-    "osconfig.googleapis.com",
-    "pubsub.googleapis.com",
-    "run.googleapis.com",
-    "secretmanager.googleapis.com",
-    "servicemanagement.googleapis.com",
-    "servicenetworking.googleapis.com",
-    "serviceusage.googleapis.com",
-    "sqladmin.googleapis.com",
-    "storage.googleapis.com",
-    "vpcaccess.googleapis.com",
-    "workflows.googleapis.com",
-    "workflowexecutions.googleapis.com",
-  ]
-  app_jit_services = [
-    "cloudbuild.googleapis.com",
-    "pubsub.googleapis.com",
-    "sqladmin.googleapis.com"
-  ]
-  app_roles = [
-    "roles/cloudscheduler.admin",
-    "roles/cloudsql.admin",
-    "roles/compute.instanceAdmin",
-    "roles/compute.loadBalancerAdmin",
-    "roles/compute.networkAdmin",
-    "roles/eventarc.admin",
-    "roles/iam.roleAdmin",
-    "roles/iam.securityAdmin",
-    "roles/iam.serviceAccountAdmin",
-    "roles/iam.serviceAccountUser",
-    "roles/monitoring.admin",
-    "roles/resourcemanager.projectIamAdmin",
-    "roles/run.admin",
-    "roles/secretmanager.admin",
-    "roles/serviceusage.serviceUsageAdmin",
-    "roles/storage.hmacKeyAdmin",
-    "roles/workflows.admin"
-  ]
 }
 
 terraform {
