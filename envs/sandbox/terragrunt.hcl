@@ -8,7 +8,6 @@ dependency "global" {
 }
 
 locals {
-  global_vars           = read_terragrunt_config(find_in_parent_folders("global.hcl"))
   environment           = "${basename(get_terragrunt_dir())}"
   network_project_name  = "sbxnet-mk3a"
   security_project_name = "sbxsec-mk3a"
@@ -34,7 +33,7 @@ inputs = {
   app_project_names      = local.app_project_names
   app_subnet_cidrs       = local.app_subnet_cidrs
   core_cicd_sa_email     = dependency.global.outputs.cicd_sa_email
-  groups                 = local.global_vars.locals.groups
+  groups                 = include.root.locals.groups
 }
 
 terraform {
