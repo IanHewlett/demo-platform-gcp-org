@@ -192,10 +192,13 @@ module "vpc_service_project" {
   for_each = module.app_projects
   source   = "../shared/gcp-vpc-service-project"
 
-  project_name     = module.app_projects[each.key].name
-  project_number   = module.app_projects[each.key].number
-  gcp_region       = var.gcp_region
-  host_vpc         = module.shared_vpc.host_vpc_name
-  app_subnet_cidr  = var.app_subnet_cidrs[module.app_projects[each.key].name]
-  project_sa_email = module.app_cicd_service_account[each.key].email
+  project_name    = module.app_projects[each.key].name
+  gcp_region      = var.gcp_region
+  host_vpc        = module.shared_vpc.host_vpc_name
+  app_subnet_cidr = var.app_subnet_cidrs[module.app_projects[each.key].name]
+
+  computeNetworkUsers = [
+    "serviceAccount:${module.app_projects[each.key].number}@cloudservices.gserviceaccount.com",
+    "serviceAccount:${module.app_cicd_service_account[each.key].email}",
+  ]
 }

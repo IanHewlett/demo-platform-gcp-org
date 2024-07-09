@@ -8,11 +8,6 @@ variable "project_name" {
   type        = string
 }
 
-variable "project_number" {
-  description = "project number"
-  type        = string
-}
-
 variable "gcp_region" {
   description = "Region for resources to be located in"
   type        = string
@@ -23,7 +18,6 @@ variable "app_subnet_cidr" {
   type        = string
 }
 
-variable "project_sa_email" {
-  type        = string
-  description = ""
+variable "computeNetworkUsers" {
+  type = set(string)
 }
