@@ -46,3 +46,7 @@ variable "groups" {
 variable "app_subnet" {
   type = string
 }
+
+variable "bucket_prefix" {
+  type = string
+}
