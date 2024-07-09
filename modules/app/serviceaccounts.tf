@@ -9,6 +9,8 @@ module "file_service_service_account" {
   project_roles = [
     "roles/cloudtrace.agent"
   ]
+
+  bindings = {}
 }
 
 module "api_service_service_account" {
@@ -24,6 +26,8 @@ module "api_service_service_account" {
     "roles/cloudsql.viewer",
     "roles/cloudtrace.agent"
   ]
+
+  bindings = {}
 }
 
 module "ui_service_service_account" {
@@ -35,6 +39,8 @@ module "ui_service_service_account" {
   description  = ""
 
   project_roles = []
+
+  bindings = {}
 }
 
 module "bastion_host_service_account" {
@@ -48,12 +54,10 @@ module "bastion_host_service_account" {
   project_roles = [
     "roles/cloudsql.client"
   ]
-}
 
-resource "google_service_account_iam_binding" "bastion_host_sa_user" {
-  service_account_id = module.bastion_host_service_account.name
-  role               = "roles/iam.serviceAccountUser"
-  members            = [var.groups["developers"]]
+  bindings = {
+    "roles/iam.serviceAccountUser" = [var.groups["developers"]]
+  }
 }
 
 module "workflow_service_account" {
@@ -71,12 +75,10 @@ module "workflow_service_account" {
     "roles/storage.objectUser",
     "roles/workflows.invoker"
   ]
-}
 
-resource "google_service_account_iam_binding" "pubsub_sa_tokenCreator_binding" {
-  role               = "roles/iam.serviceAccountTokenCreator"
-  members            = ["serviceAccount:service-${data.google_project.app_project.number}@gcp-sa-pubsub.iam.gserviceaccount.com"]
-  service_account_id = module.workflow_service_account.name
+  bindings = {
+    "roles/iam.serviceAccountTokenCreator" = ["serviceAccount:service-${data.google_project.app_project.number}@gcp-sa-pubsub.iam.gserviceaccount.com"]
+  }
 }
 
 data "google_storage_project_service_account" "gcs_account" {

@@ -21,3 +21,8 @@ variable "project_roles" {
   type        = list(string)
   description = "Roles to grant to the service account in the specified project"
 }
+
+variable "bindings" {
+  description = "Map of role (key) and list of members (value) to add the IAM policies/bindings"
+  type        = map(list(string))
+}

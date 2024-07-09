@@ -26,4 +26,6 @@ module "app_cicd_service_account" {
     "roles/storage.hmacKeyAdmin",
     "roles/workflows.admin"
   ]
+
+  bindings = {}
 }

@@ -17,6 +17,8 @@ module "core_cicd_service_account" {
     "roles/serviceusage.serviceUsageAdmin",
     "roles/storage.objectAdmin"
   ]
+
+  bindings = {}
 }
 
 resource "google_project_iam_member" "cloudbuild_member" {
