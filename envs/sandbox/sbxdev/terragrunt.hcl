@@ -18,6 +18,7 @@ inputs = {
   alert_recipients   = ["ian.w.hewlett@gmail.com"]
   groups             = include.root.locals.groups
   storage_users      = []
+  bucket_prefix      = "proto-legion"
 }
 
 terraform {
