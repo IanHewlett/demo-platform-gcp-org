@@ -14,7 +14,7 @@ resource "google_compute_instance" "bastion_host" {
     auto_delete = true
 
     initialize_params {
-      image = "debian-cloud/debian-11"
+      image = "debian-cloud/debian-12"
     }
   }
 
@@ -29,5 +29,5 @@ resource "google_compute_instance" "bastion_host" {
     scopes = ["cloud-platform"]
   }
 
-  #  metadata_startup_script = templatefile("${path.module}/scripts/startup.sh", var.api_db_config)
+  metadata_startup_script = templatefile("${path.module}/files/startup.sh", var.api_db_config)
 }
