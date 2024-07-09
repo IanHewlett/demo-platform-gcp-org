@@ -95,39 +95,3 @@ module "storage_bucket_archive" {
   storageObjectAdmins = []
   storageAdmins       = []
 }
-
-module "storage_bucket_staging" {
-  source = "../shared/gcp-storage-bucket"
-
-  bucket_name_prefix = var.bucket_prefix
-  bucket_name        = "staging"
-  environment        = var.environment
-  project            = data.google_project.app_project.name
-  region             = var.gcp_region
-  storage_class      = "STANDARD"
-  versioning         = false
-
-  storageLegacyBucketReaders = []
-  storageObjectViewers       = []
-  storageObjectUsers         = []
-  storageObjectAdmins        = []
-  storageAdmins              = []
-}
-
-module "storage_other_intake" {
-  source = "../shared/gcp-storage-bucket"
-
-  bucket_name_prefix = var.bucket_prefix
-  bucket_name        = "other-intake"
-  environment        = var.environment
-  project            = data.google_project.app_project.name
-  region             = var.gcp_region
-  storage_class      = "STANDARD"
-  versioning         = false
-
-  storageLegacyBucketReaders = []
-  storageObjectViewers       = []
-  storageObjectUsers         = []
-  storageObjectAdmins        = []
-  storageAdmins              = []
-}
