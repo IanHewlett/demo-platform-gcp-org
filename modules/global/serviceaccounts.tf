@@ -26,3 +26,16 @@ resource "google_project_iam_member" "cloudbuild_member" {
   role    = "roles/storage.admin"
   member  = "serviceAccount:${module.cicd_project.number}@cloudbuild.gserviceaccount.com"
 }
+
+module "cloud_build_service_account" {
+  source = "../shared/gcp-service-account"
+
+  project_id   = module.cicd_project.name
+  account_id   = "terraform-sa-build-submit"
+  display_name = "Terraform-managed."
+  description  = "cloud build submitter service account"
+
+  project_roles = []
+
+  bindings = {}
+}

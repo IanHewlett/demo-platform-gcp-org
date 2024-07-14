@@ -23,7 +23,16 @@ variable "groups" {
   type        = map(string)
 }
 
+variable "gcp_region" {
+  description = "Region for resources to be located in"
+  type        = string
+}
+
 variable "environment" {
   description = ""
   type        = string
+}
+
+variable "bucket_prefix" {
+  type = string
 }
