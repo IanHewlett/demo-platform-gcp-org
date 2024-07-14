@@ -13,55 +13,44 @@ resource "google_compute_shared_vpc_host_project" "shared_vpc_host" {
   project = google_compute_network.vpc.name
 }
 
-resource "google_compute_shared_vpc_service_project" "sec_service_project" {
-  host_project    = google_compute_shared_vpc_host_project.shared_vpc_host.id
-  service_project = var.security_project_name
+module "subnets" {
+  source = "./modules/subnets"
+
+  project_name = var.network_project_name
+  gcp_region   = var.gcp_region
+
+  network_link           = google_compute_network.vpc.self_link
+  core_subnet_cidr       = var.core_subnet_cidr
+  serverless_subnet_cidr = var.serverless_subnet_cidr
 }
 
-resource "google_compute_route" "private_api_gateway" {
-  project          = google_compute_network.vpc.name
-  name             = "${var.network_project_name}-private-googleapis"
-  network          = google_compute_network.vpc.self_link
-  dest_range       = "199.36.153.8/30"
-  next_hop_gateway = "default-internet-gateway"
+module "routes" {
+  source = "./modules/routes"
+
+  project_name = var.network_project_name
+  network_link = google_compute_network.vpc.self_link
 }
 
-resource "google_compute_route" "restricted_api_gateway" {
-  project          = google_compute_network.vpc.name
-  name             = "${var.network_project_name}-restricted-googleapis"
-  network          = google_compute_network.vpc.self_link
-  dest_range       = "199.36.153.4/30"
-  next_hop_gateway = "default-internet-gateway"
+module "firewall" {
+  source = "./modules/firewall"
+
+  project_name = var.network_project_name
+  network_link = google_compute_network.vpc.self_link
 }
 
-resource "google_compute_subnetwork" "core_subnet" {
-  project                    = google_compute_network.vpc.name
-  name                       = "core-subnet"
-  ip_cidr_range              = var.core_subnet_cidr
-  region                     = var.gcp_region
-  network                    = google_compute_network.vpc.self_link
-  purpose                    = "PRIVATE"
-  private_ip_google_access   = true
-  private_ipv6_google_access = "DISABLE_GOOGLE_ACCESS"
+module "serviceprojects" {
+  source = "./modules/serviceprojects"
 
-  log_config {
-    aggregation_interval = "INTERVAL_10_MIN"
-  }
+  host_vpc                    = google_compute_network.vpc.name
+  project_name                = var.network_project_name
+  shared_vpc_service_projects = var.shared_vpc_service_projects
 }
 
-resource "google_compute_subnetwork" "serverless_subnet" {
-  project                    = google_compute_network.vpc.name
-  name                       = "serverless-subnet"
-  ip_cidr_range              = var.serverless_subnet_cidr
-  region                     = var.gcp_region
-  network                    = google_compute_network.vpc.self_link
-  purpose                    = "PRIVATE"
-  private_ip_google_access   = true
-  private_ipv6_google_access = "DISABLE_GOOGLE_ACCESS"
+module "psa" {
+  source = "./modules/psa"
 
-  log_config {
-    aggregation_interval = "INTERVAL_10_MIN"
-  }
+  project_name = var.network_project_name
+  network_id   = google_compute_network.vpc.id
 }
 
 resource "google_vpc_access_connector" "vpc_connector" {
@@ -75,30 +64,6 @@ resource "google_vpc_access_connector" "vpc_connector" {
   max_instances = 3
 
   subnet {
-    name = google_compute_subnetwork.serverless_subnet.name
+    name = module.subnets.serverless_subnet_name
   }
-}
-
-resource "google_compute_global_address" "psa_ranges" {
-  project       = google_compute_network.vpc.name
-  name          = "cloudsql-psa"
-  address_type  = "INTERNAL"
-  purpose       = "VPC_PEERING"
-  address       = "10.240.0.0"
-  prefix_length = 24
-  network       = google_compute_network.vpc.self_link
-}
-
-resource "google_service_networking_connection" "psa_connection" {
-  network                 = google_compute_network.vpc.self_link
-  service                 = "servicenetworking.googleapis.com"
-  reserved_peering_ranges = [google_compute_global_address.psa_ranges.name]
-}
-
-resource "google_compute_network_peering_routes_config" "psa_routes" {
-  project              = google_compute_network.vpc.name
-  peering              = google_service_networking_connection.psa_connection.peering
-  network              = google_compute_network.vpc.name
-  export_custom_routes = false
-  import_custom_routes = false
 }

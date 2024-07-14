@@ -1,8 +1,3 @@
-resource "google_compute_shared_vpc_service_project" "vpc_service_project" {
-  host_project    = var.host_vpc
-  service_project = var.project_name
-}
-
 resource "google_compute_subnetwork" "app_subnet" {
   project                    = var.host_vpc
   name                       = "${var.project_name}-subnet"

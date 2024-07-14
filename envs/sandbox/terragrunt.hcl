@@ -13,20 +13,20 @@ inputs = {
   core_folder_id         = dependency.global.outputs.core_folder_id
   gcp_region             = "us-central1"
   environment            = "${basename(get_terragrunt_dir())}"
-  network_project_name   = "sbxnet-mk3a"
-  security_project_name  = "sbxsec-mk3a"
+  network_project_name   = "sbxnet-mk4a"
+  security_project_name  = "sbxsec-mk4a"
   core_subnet_cidr       = "172.16.34.0/24"
   serverless_subnet_cidr = "10.240.1.0/28"
   core_cicd_sa_email     = dependency.global.outputs.cicd_sa_email
   groups                 = include.root.locals.groups
 
   app_project_names = [
-    "sbxdev-mk3a"
+    "sbxdev-mk4a"
   ]
 
   app_subnet_cidrs = {
-    "sbxdev-mk3a" : "172.16.32.0/24"
-    "sbxqa-mk3a" : "172.16.33.0/24"
+    "sbxdev-mk4a" : "172.16.32.0/24"
+    "sbxqa-mk4a" : "172.16.33.0/24"
   }
 }
 

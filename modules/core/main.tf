@@ -182,13 +182,33 @@ module "shared_vpc" {
   source = "../shared/gcp-vpc-shared"
 
   network_project_name   = module.network_project.name
-  security_project_name  = module.security_project.name
   gcp_region             = var.gcp_region
   core_subnet_cidr       = var.core_subnet_cidr
   serverless_subnet_cidr = var.serverless_subnet_cidr
+
+  shared_vpc_service_projects = concat(
+    [module.security_project.name],
+    values(module.app_projects)[*].name
+  )
+
+  #  app_subnets = [
+  #    {
+  #      subnet_name = "sbxdev-mk4a"
+  #      subnet_ip   = "172.16.32.0/24"
+  #    },
+  #    {
+  #      subnet_name = "sbxqa-mk4a"
+  #      subnet_ip   = "172.16.33.0/24"
+  #    },
+  #  ]
+
+  #  computeNetworkUsers = [
+  #    "serviceAccount:${module.app_projects[each.key].number}@cloudservices.gserviceaccount.com",
+  #    "serviceAccount:${module.app_cicd_service_account[each.key].email}",
+  #  ]
 }
 
-module "vpc_service_project" {
+module "vpc_app_project_subnets" {
   for_each = module.app_projects
   source   = "../shared/gcp-vpc-service-project"
 
