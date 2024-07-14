@@ -47,3 +47,7 @@ variable "storageObjectAdmins" {
 variable "storageAdmins" {
   type = set(string)
 }
+
+variable "storageObjectCreators" {
+  type = set(string)
+}
