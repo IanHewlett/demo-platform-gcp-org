@@ -1,5 +1,5 @@
 include "root" {
-  path   = "../../../terragrunt.hcl"
+  path   = "../../../../terragrunt.hcl"
   expose = true
 }
 
@@ -24,5 +24,5 @@ inputs = {
 }
 
 terraform {
-  source = "../../../modules//app"
+  source = "../../../../modules//app"
 }

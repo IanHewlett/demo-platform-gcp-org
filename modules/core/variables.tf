@@ -8,15 +8,6 @@ variable "core_folder_id" {
   type        = string
 }
 
-variable "gcp_region" {
-  description = "Region for resources to be located in"
-  type        = string
-}
-
-variable "environment" {
-  description = ""
-}
-
 variable "groups" {
   description = "Map of short group name to full google group name"
   type        = map(string)
@@ -37,21 +28,7 @@ variable "security_project_name" {
   type        = string
 }
 
-variable "core_subnet_cidr" {
-  description = ""
-  type        = string
-}
-
-variable "serverless_subnet_cidr" {
-  description = ""
-  type        = string
-}
-
 variable "app_project_names" {
   description = ""
   type        = set(string)
-}
-
-variable "app_subnet_cidrs" {
-  type = map(string)
 }

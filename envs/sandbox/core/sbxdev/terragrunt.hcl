@@ -1,18 +1,18 @@
 include "root" {
-  path   = "../../../terragrunt.hcl"
+  path   = "../../../../terragrunt.hcl"
   expose = true
 }
 
-dependency "core" {
+dependency "core-net" {
   config_path = ".."
 }
 
 inputs = {
   gcp_region         = "us-central1"
   environment        = "${basename(get_terragrunt_dir())}"
-  app_project_name   = "sbxdev-mk4a"
-  host_vpc           = dependency.core.outputs.host_vpc_name
-  app_subnet         = "sbxdev-mk4a-subnet"
+  app_project_name   = "sbxdev-mk5a"
+  host_vpc           = dependency.core-net.outputs.host_vpc_name
+  app_subnet         = "sbxdev-mk5a-subnet"
   domains            = ["ianwhewlett.com"]
   allocated_ip_range = "cloudsql-psa"
   alert_recipients   = ["ian.w.hewlett@gmail.com"]
@@ -22,5 +22,5 @@ inputs = {
 }
 
 terraform {
-  source = "../../../modules//app"
+  source = "../../../../modules//app"
 }

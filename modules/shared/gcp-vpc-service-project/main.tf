@@ -20,5 +20,8 @@ resource "google_compute_subnetwork_iam_binding" "subnet_binding" {
   subnetwork = google_compute_subnetwork.app_subnet.id
   role       = "roles/compute.networkUser"
 
-  members = var.computeNetworkUsers
+  members = [
+    "serviceAccount:${data.google_project.app_project.number}@cloudservices.gserviceaccount.com",
+    "serviceAccount:${data.google_service_account.app_service_account.email}",
+  ]
 }

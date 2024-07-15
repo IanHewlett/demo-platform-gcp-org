@@ -17,7 +17,3 @@ variable "app_subnet_cidr" {
   description = ""
   type        = string
 }
-
-variable "computeNetworkUsers" {
-  type = set(string)
-}
