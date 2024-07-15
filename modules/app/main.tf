@@ -25,24 +25,37 @@ module "cloud_run_ui_service" {
 module "cloudsql_api_service" {
   source = "../shared/gcp-cloudsql"
 
-  project_name           = data.google_project.app_project.name
-  gcp_region             = var.gcp_region
-  allocated_ip_range     = var.allocated_ip_range
-  db_tier                = "db-custom-1-3840"
-  environment            = var.environment
-  api_service_account    = module.api_service_service_account.email
+  project_name = data.google_project.app_project.name
+  gcp_region   = var.gcp_region
+  environment  = var.environment
+
+  database_name = "api-${var.environment}"
+  instance_name = "api-${var.environment}-db"
+  service_name  = "api"
+  db_tier       = "db-custom-1-3840"
+
   shared_network_project = var.host_vpc
+  allocated_ip_range     = var.allocated_ip_range
+  private_network        = data.google_compute_network.shared_network.id
+
+  service_account = module.api_service_service_account.email
+}
+
+module "cloud_armor" {
+  source = "../shared/gcp-security-policies"
+
+  project_name = var.app_project_name
 }
 
 module "load_balancer" {
   source = "../shared/gcp-load-balancer"
 
-  project_name               = data.google_project.app_project.name
-  cloud_run_service_name_ui  = module.cloud_run_ui_service.cloud_run_service_name
-  cloud_run_service_name_api = module.cloud_run_api_service.cloud_run_service_name
-  domains                    = var.domains
-  gcp_region                 = var.gcp_region
-  environment                = var.environment
+  project_name         = data.google_project.app_project.name
+  cloud_run_services   = [module.cloud_run_ui_service.cloud_run_service_name, module.cloud_run_api_service.cloud_run_service_name]
+  domains              = var.domains
+  gcp_region           = var.gcp_region
+  environment          = var.environment
+  security_policy_name = module.cloud_armor.security_policy_name
 }
 
 module "bastion_host" {
@@ -62,6 +75,20 @@ module "bastion_host" {
     db_user_secret      = module.cloudsql_api_service.db_user_secret
     db_pass_secret      = module.cloudsql_api_service.db_pass_secret
   }
+}
+
+module "sftp_server" {
+  source = "../shared/gcp-sftp-server"
+
+  project         = var.app_project_name
+  region          = var.gcp_region
+  environment     = var.environment
+  private_network = data.google_compute_network.shared_network.id
+  subnet          = data.google_compute_subnetwork.env_subnet.id
+  zone            = "${var.gcp_region}-a"
+  sftp_host_sa    = module.sftp_server_service_account.email
+  sshKey          = ""
+  users           = {}
 }
 
 module "workflow" {

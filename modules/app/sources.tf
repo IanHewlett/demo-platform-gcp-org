@@ -36,6 +36,21 @@ locals {
       url    = "http://deb.debian.org/debian/pool/main/p/postgresql-common/postgresql-client_15%2b248_all.deb"
     },
     {
+      name   = "libfuse2_2.9.9-6+b1_amd64.deb"
+      sha256 = "df32b8f65d819f854e096896890d6ad632b6e520977bb120bb3143b4c66e2fcd"
+      url    = "http://deb.debian.org/debian/pool/main/f/fuse/libfuse2_2.9.9-6%2bb1_amd64.deb"
+    },
+    {
+      name   = "fuse_2.9.9-6+b1_amd64.deb"
+      sha256 = "94862fb7c5a72e92d1d4158d1b16d3afae5b7bd89f1295b23eed4780303aa6a6"
+      url    = "http://deb.debian.org/debian/pool/main/f/fuse/fuse_2.9.9-6%2bb1_amd64.deb"
+    },
+    {
+      name   = "gcsfuse_2.3.1_amd64.deb"
+      sha256 = "01500211ef11a2a6df3f3c874b963358e058bcd658d0148508873c58535092fd"
+      url    = "https://packages.cloud.google.com/apt/pool/gcsfuse-bookworm/gcsfuse_2.3.1_amd64_4bd55c3c88b37e79c6107f76cfe0d2bb.deb"
+    },
+    {
       name   = "cloud-sql-proxy.linux.amd64"
       sha256 = "b966551f20c4a669dea521c31b796d0192873ebbdaf719c3d4c38ad569974207"
       url    = "https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.11.4/cloud-sql-proxy.linux.amd64"
@@ -63,11 +78,13 @@ module "storage_bucket_package_sources" {
   storageObjectViewers       = []
 
   storageObjectUsers = [
-    module.bastion_host_service_account.sa_member
+    module.bastion_host_service_account.sa_member,
+    module.sftp_server_service_account.sa_member
   ]
 
-  storageObjectAdmins = []
-  storageAdmins       = []
+  storageObjectAdmins   = []
+  storageAdmins         = []
+  storageObjectCreators = []
 }
 
 resource "null_resource" "download_source" {

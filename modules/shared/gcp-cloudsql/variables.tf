@@ -28,7 +28,27 @@ variable "allocated_ip_range" {
   description = ""
 }
 
-variable "api_service_account" {
+variable "service_account" {
   type        = string
   description = ""
+}
+
+variable "instance_name" {
+  type        = string
+  description = "Name of the CloudSQL instance"
+}
+
+variable "database_name" {
+  type        = string
+  description = "Name of the database"
+}
+
+variable "private_network" {
+  type        = string
+  description = "Fully qualified resource name of the VPC network used by the CloudSQL instance"
+}
+
+variable "service_name" {
+  type        = string
+  description = "Name of the service which is using the database"
 }

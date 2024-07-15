@@ -7,9 +7,9 @@ output "db_name" {
 }
 
 output "db_user_secret" {
-  value = google_secret_manager_secret.api_db_user.id
+  value = google_secret_manager_secret.db_user.id
 }
 
 output "db_pass_secret" {
-  value = google_secret_manager_secret.api_db_pass.id
+  value = google_secret_manager_secret.db_pass.id
 }

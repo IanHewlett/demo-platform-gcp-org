@@ -25,6 +25,8 @@ module "storage_bucket_upload" {
   ]
 
   storageAdmins = []
+
+  storageObjectCreators = []
 }
 
 module "storage_bucket_output" {
@@ -52,6 +54,8 @@ module "storage_bucket_output" {
   storageObjectAdmins = []
 
   storageAdmins = []
+
+  storageObjectCreators = []
 }
 
 module "storage_bucket_reject" {
@@ -70,6 +74,7 @@ module "storage_bucket_reject" {
   storageObjectUsers         = var.storage_users
   storageObjectAdmins        = []
   storageAdmins              = []
+  storageObjectCreators      = []
 }
 
 module "storage_bucket_archive" {
@@ -91,7 +96,8 @@ module "storage_bucket_archive" {
     module.api_service_service_account.sa_member
   ]
 
-  storageObjectUsers  = []
-  storageObjectAdmins = []
-  storageAdmins       = []
+  storageObjectUsers    = []
+  storageObjectAdmins   = []
+  storageAdmins         = []
+  storageObjectCreators = []
 }

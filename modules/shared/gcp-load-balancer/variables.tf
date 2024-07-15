@@ -18,12 +18,10 @@ variable "environment" {
   type        = string
 }
 
-variable "cloud_run_service_name_api" {
-  type        = string
-  description = "Google Cloud Run service name"
+variable "cloud_run_services" {
+  type = set(string)
 }
 
-variable "cloud_run_service_name_ui" {
-  type        = string
-  description = "Google Cloud Run service name"
+variable "security_policy_name" {
+  type = string
 }

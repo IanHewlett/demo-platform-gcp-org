@@ -81,6 +81,22 @@ module "workflow_service_account" {
   }
 }
 
+module "sftp_server_service_account" {
+  source = "../shared/gcp-service-account"
+
+  project_id   = var.app_project_name
+  account_id   = "app-${var.environment}-sftp-runner"
+  display_name = "Runtime service account for SFTP host"
+  description  = "Runtime service account for SFTP host"
+
+  project_roles = [
+    "roles/logging.logWriter",
+    "roles/monitoring.metricWriter"
+  ]
+
+  bindings = {}
+}
+
 data "google_storage_project_service_account" "gcs_account" {
   project = data.google_project.app_project.name
 }

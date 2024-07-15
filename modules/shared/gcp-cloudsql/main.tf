@@ -1,11 +1,11 @@
 resource "google_sql_database_instance" "application_db_instance" {
   provider = google-beta
 
-  name                = "api-${var.environment}"
+  project             = var.project_name
   region              = var.gcp_region
+  name                = var.instance_name
   database_version    = "POSTGRES_15"
   deletion_protection = false
-  project             = var.project_name
 
   settings {
     tier              = var.db_tier
@@ -13,7 +13,7 @@ resource "google_sql_database_instance" "application_db_instance" {
 
     ip_configuration {
       ipv4_enabled                                  = false
-      private_network                               = "projects/${var.shared_network_project}/global/networks/${var.shared_network_project}"
+      private_network                               = var.private_network
       allocated_ip_range                            = var.allocated_ip_range
       require_ssl                                   = true
       enable_private_path_for_google_cloud_services = true
@@ -37,6 +37,6 @@ resource "google_sql_database_instance" "application_db_instance" {
 
 resource "google_sql_database" "application_db" {
   project  = var.project_name
-  name     = "api-${var.environment}-db"
+  name     = var.database_name
   instance = google_sql_database_instance.application_db_instance.name
 }
