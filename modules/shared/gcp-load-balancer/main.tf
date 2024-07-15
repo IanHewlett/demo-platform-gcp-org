@@ -1,3 +1,6 @@
+##
+# A regional NEG that can support Serverless Products, proxying traffic to external backends and providing traffic to the PSC port mapping endpoints.
+# https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_region_network_endpoint_group
 resource "google_compute_region_network_endpoint_group" "serverless" {
   for_each = var.cloud_run_services
 
@@ -11,6 +14,11 @@ resource "google_compute_region_network_endpoint_group" "serverless" {
   }
 }
 
+##
+# A Backend Service defines a group of virtual machines that will serve traffic for load balancing.
+# This resource is a global backend service, appropriate for external load balancing or self-managed internal load balancing.
+# For managed internal load balancing, use a regional backend service instead.
+# https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_backend_service
 resource "google_compute_backend_service" "serverless" {
   for_each = var.cloud_run_services
 
@@ -31,6 +39,9 @@ resource "google_compute_backend_service" "serverless" {
   }
 }
 
+##
+# UrlMaps are used to route requests to a backend service based on rules that you define for the host and path of an incoming URL.
+# https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_url_map
 resource "google_compute_url_map" "default" {
   name            = "ingress-${var.environment}"
   default_service = google_compute_backend_service.serverless["app-ui-service"].id
@@ -54,6 +65,9 @@ resource "google_compute_url_map" "default" {
   }
 }
 
+##
+# Represents a TargetHttpsProxy resource, which is used by one or more global forwarding rule to route incoming HTTPS requests to a URL map.
+# https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_target_https_proxy
 resource "google_compute_target_https_proxy" "default" {
   name    = "ingress-${var.environment}"
   url_map = google_compute_url_map.default.id
@@ -64,6 +78,11 @@ resource "google_compute_target_https_proxy" "default" {
   ]
 }
 
+##
+# Represents a GlobalForwardingRule resource.
+# Global forwarding rules are used to forward traffic to the correct load balancer for HTTP load balancing.
+# Global forwarding rules can only be used for HTTP load balancing.
+# https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_global_forwarding_rule
 resource "google_compute_global_forwarding_rule" "default" {
   name        = "ingress-${var.environment}"
   target      = google_compute_target_https_proxy.default.id
