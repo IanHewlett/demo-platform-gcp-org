@@ -56,6 +56,7 @@ module "load_balancer" {
   gcp_region           = var.gcp_region
   environment          = var.environment
   security_policy_name = module.cloud_armor.security_policy_name
+  project_number       = data.google_project.app_project.number
 }
 
 module "bastion_host" {
