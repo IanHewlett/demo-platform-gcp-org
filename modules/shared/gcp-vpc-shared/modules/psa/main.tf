@@ -18,17 +18,23 @@ resource "google_service_networking_connection" "psa_connection" {
   network                 = var.network_id
   service                 = "servicenetworking.googleapis.com"
   reserved_peering_ranges = [google_compute_global_address.psa_ranges.name]
+
+  # The deletion policy for the service networking connection.
+  # Setting to ABANDON allows the resource to be abandoned rather than deleted.
+  # This will enable a successful terraform destroy when destroying CloudSQL instances.
+  # Use with care as it can lead to dangling resources.
+  deletion_policy = "ABANDON"
 }
 
-## (Optional) Import or export custom routes
-# Manage a network peering's route settings without managing the peering as a whole.
-# This resource is primarily intended for use with GCP-generated peerings that shouldn't otherwise be managed by other tools.
-# Deleting this resource is a no-op and the peering will not be modified.
-# https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_network_peering_routes_config
-resource "google_compute_network_peering_routes_config" "psa_routes" {
-  project              = var.project_name
-  peering              = google_service_networking_connection.psa_connection.peering
-  network              = var.project_name
-  export_custom_routes = false
-  import_custom_routes = false
-}
+### (Optional) Import or export custom routes
+## Manage a network peering's route settings without managing the peering as a whole.
+## This resource is primarily intended for use with GCP-generated peerings that shouldn't otherwise be managed by other tools.
+## Deleting this resource is a no-op and the peering will not be modified.
+## https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_network_peering_routes_config
+#resource "google_compute_network_peering_routes_config" "psa_routes" {
+#  project              = var.project_name
+#  peering              = google_service_networking_connection.psa_connection.peering
+#  network              = var.project_name
+#  export_custom_routes = false
+#  import_custom_routes = false
+#}
