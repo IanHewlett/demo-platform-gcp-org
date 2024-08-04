@@ -52,6 +52,8 @@ module "bastion_host_service_account" {
   description  = ""
 
   project_roles = [
+    "roles/logging.logWriter",
+    "roles/monitoring.metricWriter",
     "roles/cloudsql.client"
   ]
 
