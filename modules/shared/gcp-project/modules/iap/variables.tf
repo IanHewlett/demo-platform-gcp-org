@@ -3,11 +3,6 @@ variable "project_name" {
   description = "Google Project ID"
 }
 
-variable "project_number" {
-  type        = string
-  description = "Google Project Number"
-}
-
 variable "domains" {
   type        = list(string)
   description = "List of domain names for certificate provisioning"

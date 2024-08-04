@@ -35,7 +35,8 @@ module "security_project" {
     "secretmanager.googleapis.com"
   ]
 
-  bindings = {}
+  bindings   = {}
+  enable_iap = false
 }
 
 module "network_project" {
@@ -91,6 +92,7 @@ module "network_project" {
       for number in values(module.app_projects)[*].number : "serviceAccount:service-${number}@serverless-robot-prod.iam.gserviceaccount.com"
     ]
   }
+  enable_iap = false
 }
 
 module "app_folder" {
@@ -166,7 +168,8 @@ module "app_projects" {
     "sqladmin.googleapis.com"
   ]
 
-  bindings = {}
+  bindings   = {}
+  enable_iap = true
 }
 
 #TODO this role is not able to be used on the folder

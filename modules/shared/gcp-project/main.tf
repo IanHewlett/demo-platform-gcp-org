@@ -57,3 +57,10 @@ resource "google_project_iam_binding" "project_iam_authoritative" {
   role    = each.key
   members = each.value
 }
+
+module "iap" {
+  source = "./modules/iap"
+  count  = var.enable_iap ? 1 : 0
+
+  project_name = var.project_name
+}

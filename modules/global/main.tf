@@ -89,7 +89,8 @@ module "cicd_project" {
     "secretmanager.googleapis.com"
   ]
 
-  bindings = {}
+  bindings   = {}
+  enable_iap = false
 }
 
 #TODO should this be in core tier? else need handling here for nonprod and prod as well
