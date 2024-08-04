@@ -18,6 +18,11 @@ variable "core_cicd_sa_email" {
   type        = string
 }
 
+variable "monitoring_project_name" {
+  description = "project name"
+  type        = string
+}
+
 variable "network_project_name" {
   description = "project name"
   type        = string

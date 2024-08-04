@@ -10,9 +10,9 @@ dependency "core-net" {
 inputs = {
   gcp_region         = "us-central1"
   environment        = "${basename(get_terragrunt_dir())}"
-  app_project_name   = "sbxdev-mk5a"
+  app_project_name   = "sbxdev-mk6a"
   host_vpc           = dependency.core-net.outputs.host_vpc_name
-  app_subnet         = "sbxdev-mk5a-subnet"
+  app_subnet         = "sbxdev-mk6a-subnet"
   domains            = ["ianwhewlett.com"]
   allocated_ip_range = "cloudsql-psa"
   alert_recipients   = ["ian.w.hewlett@gmail.com"]

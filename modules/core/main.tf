@@ -1,9 +1,47 @@
+module "monitoring_project" {
+  source = "../shared/gcp-project"
+
+  billing_account_id = var.billing_account_id
+  folder_id          = var.core_folder_id
+  project_name       = var.monitoring_project_name
+  enable_iap         = false
+
+  project_services = [
+    "admin.googleapis.com",
+    "artifactregistry.googleapis.com",
+    "cloudbilling.googleapis.com",
+    "cloudbuild.googleapis.com",
+    "clouddeploy.googleapis.com",
+    "cloudidentity.googleapis.com",
+    "cloudresourcemanager.googleapis.com",
+    "cloudscheduler.googleapis.com",
+    "compute.googleapis.com",
+    "groupssettings.googleapis.com",
+    "iam.googleapis.com",
+    "iamcredentials.googleapis.com",
+    "identitytoolkit.googleapis.com",
+    "logging.googleapis.com",
+    "networkmanagement.googleapis.com",
+    "orgpolicy.googleapis.com",
+    "secretmanager.googleapis.com",
+    "servicemanagement.googleapis.com",
+    "servicenetworking.googleapis.com",
+    "serviceusage.googleapis.com",
+    "storage.googleapis.com",
+    "vpcaccess.googleapis.com",
+  ]
+
+  jit_services = []
+  bindings     = {}
+}
+
 module "security_project" {
   source = "../shared/gcp-project"
 
   billing_account_id = var.billing_account_id
   folder_id          = var.core_folder_id
   project_name       = var.security_project_name
+  enable_iap         = false
 
   project_services = [
     "admin.googleapis.com",
@@ -35,8 +73,7 @@ module "security_project" {
     "secretmanager.googleapis.com"
   ]
 
-  bindings   = {}
-  enable_iap = false
+  bindings = {}
 }
 
 module "network_project" {
@@ -45,6 +82,7 @@ module "network_project" {
   billing_account_id = var.billing_account_id
   folder_id          = var.core_folder_id
   project_name       = var.network_project_name
+  enable_iap         = false
 
   project_services = [
     "admin.googleapis.com",
@@ -92,7 +130,6 @@ module "network_project" {
       for number in values(module.app_projects)[*].number : "serviceAccount:service-${number}@serverless-robot-prod.iam.gserviceaccount.com"
     ]
   }
-  enable_iap = false
 }
 
 module "app_folder" {
@@ -126,6 +163,7 @@ module "app_projects" {
   billing_account_id = var.billing_account_id
   folder_id          = module.app_folder.folder_id
   project_name       = each.key
+  enable_iap         = true
 
   project_services = [
     "admin.googleapis.com",
@@ -168,8 +206,7 @@ module "app_projects" {
     "sqladmin.googleapis.com"
   ]
 
-  bindings   = {}
-  enable_iap = true
+  bindings = {}
 }
 
 #TODO this role is not able to be used on the folder
