@@ -12,10 +12,12 @@ module "global_folder" {
       "serviceAccount:${module.core_cicd_service_account.email}"
     ]
     "roles/resourcemanager.folderAdmin" = [
-      "serviceAccount:${module.core_cicd_service_account.email}"
+      "serviceAccount:${module.core_cicd_service_account.email}",
+      var.groups["admins"]
     ]
     "roles/resourcemanager.projectIamAdmin" = [
-      "serviceAccount:${module.core_cicd_service_account.email}"
+      "serviceAccount:${module.core_cicd_service_account.email}",
+      var.groups["admins"]
     ]
     "roles/serviceusage.serviceUsageAdmin" = [
       "serviceAccount:${module.core_cicd_service_account.email}"
@@ -24,22 +26,14 @@ module "global_folder" {
       "serviceAccount:${module.core_cicd_service_account.email}"
     ]
     "roles/iam.serviceAccountUser" = [
-      "serviceAccount:${module.core_cicd_service_account.email}"
+      "serviceAccount:${module.core_cicd_service_account.email}",
+      var.groups["admins"]
     ]
     "roles/storage.admin" = [
       "serviceAccount:${module.core_cicd_service_account.email}"
     ]
     "roles/compute.xpnAdmin" = [
       "serviceAccount:${module.core_cicd_service_account.email}"
-    ]
-    "roles/resourcemanager.folderAdmin" = [
-      var.groups["admins"]
-    ]
-    "roles/iam.serviceAccountUser" = [
-      var.groups["admins"]
-    ]
-    "roles/resourcemanager.projectIamAdmin" = [
-      var.groups["admins"]
     ]
     "roles/iam.serviceAccountTokenCreator" = [
       var.groups["admins"]
