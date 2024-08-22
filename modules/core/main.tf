@@ -153,6 +153,12 @@ module "app_folder" {
     "roles/compute.viewer" = [
       var.groups["developers"]
     ]
+    "roles/storage.objectCreator" = [
+      var.groups["developers"]
+    ]
+    "roles/storage.objectViewer" = [
+      var.groups["developers"]
+    ]
   }
 }
 
